@@ -25,5 +25,4 @@ class Config {
             it.toLongOrNull() ?: throw Exception("Could not read channel id in $fileName")
         } ?: throw Exception("No command_channels in $fileName")
     }
-
 }
