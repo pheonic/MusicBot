@@ -117,6 +117,10 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         val guildAudioPlayer = guildAudioPlayer(event.guild)
         var i = 1
         val currentTrack = guildAudioPlayer.nowPlaying()
+        if (currentTrack == null) {
+            sendMessage(event.channel, "```There are no songs in queue.```")
+            return
+        }
         var totalTime = currentTrack.duration
         val stringBuilder = StringBuilder("```")
         stringBuilder.append(
