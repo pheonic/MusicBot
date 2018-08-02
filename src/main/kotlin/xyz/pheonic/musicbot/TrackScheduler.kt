@@ -38,4 +38,8 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
         list.shuffle()
         queue.addAll(list)
     }
+
+    fun size(): Int {
+        return queue.size
+    }
 }

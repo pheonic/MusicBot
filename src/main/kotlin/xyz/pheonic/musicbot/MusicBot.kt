@@ -13,6 +13,9 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.util.MessageBuilder
+import java.time.Duration
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 
 class MusicBot(private val client: IDiscordClient, private val config: Config) {
@@ -108,16 +111,30 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
 
     fun showQueue(event: MessageEvent) {
         logger.debug("Got showQueue event $event")
-        //TODO rewrite this to also show the currently playing song and how many songs there are total in the queue
-        val iterator = guildAudioPlayer(event.guild).scheduler.iterator()
+        val guildAudioPlayer = guildAudioPlayer(event.guild)
+        val iterator = guildAudioPlayer.scheduler.iterator()
         var i = 1
-        val stringBuilder = StringBuilder("Queue:\n")
+        val currentTrack = guildAudioPlayer.nowPlaying()
+        val stringBuilder =
+            StringBuilder(
+                "**Currently playing:** ${currentTrack.info.title} " +
+                        "(${millisToTime(currentTrack.position)} / ${millisToTime(currentTrack.duration)})\n\n"
+            )
         while (iterator.hasNext() && stringBuilder.length < 1500) {
             val nextTrack = iterator.next()
-            stringBuilder.append("$i. ${nextTrack.info.title}\n")
+            stringBuilder.append("$i. ${nextTrack.info.title} (${millisToTime(nextTrack.duration)})\n")
             i++
         }
+        stringBuilder.append("\nAnd ${guildAudioPlayer.scheduler.size() - i} more songs.")
         sendMessage(event.channel, stringBuilder.toString())
+    }
+
+    private fun millisToTime(millis: Long): String {
+        var duration = Duration.of(millis, ChronoUnit.MILLIS)
+        val minutes = duration.toMinutes()
+        duration = duration.minusMinutes(minutes)
+        val seconds = duration.seconds
+        return "%02d:%02d".format(minutes, seconds)
     }
 
     fun clean(

@@ -2,6 +2,7 @@ package xyz.pheonic.musicbot
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 
 class GuildMusicManager(manager: AudioPlayerManager) {
     private val player: AudioPlayer = manager.createPlayer()
@@ -21,5 +22,9 @@ class GuildMusicManager(manager: AudioPlayerManager) {
         player.addListener(scheduler)
     }
 
+    fun nowPlaying(): AudioTrack {
+        return player.playingTrack
+    }
+    
     fun audioProvider() = AudioProvider(player)
 }
