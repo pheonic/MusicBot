@@ -19,8 +19,11 @@ import java.util.*
 
 
 class MusicBot(private val client: IDiscordClient, private val config: Config) {
-    //TODO improve the log messages to show the actual relevant content of the message instead of nothing
     private val logger = KotlinLogging.logger { }
+
+    private fun MessageEvent.debugString(): String =
+        "Event [id=${this.messageID}, author=${this.author}, content=${this.message.content}]"
+
     private val playerManager: AudioPlayerManager
     private val musicManagers: MutableMap<Long, GuildMusicManager>
 
@@ -32,7 +35,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun summon(event: MessageEvent) {
-        logger.debug("Got summon event $event")
+        logger.debug("Got summon ${event.debugString()}")
         val summoner = event.author
         val voiceChannel = summoner.voiceStates[event.guild.longID].channel
         voiceChannel?.join() ?: sendMessage(event.channel, "$summoner is not in a voice channel")
@@ -43,7 +46,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun playSong(event: MessageEvent) {
-        logger.debug("Got playSong event $event")
+        logger.debug("Got playSong ${event.debugString()}")
         val musicManager = guildAudioPlayer(event.guild)
         val trackUrl = event.message.content.substringAfter(' ')
         playerManager.loadItemOrdered(
@@ -54,7 +57,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun notACommand(event: MessageEvent) {
-        logger.debug("Got notACommand event $event")
+        logger.debug("Got notACommand ${event.debugString()}")
     }
 
     @Synchronized
@@ -68,12 +71,12 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun nextSong(event: MessageEvent) {
-        logger.debug("Got nextSong event $event")
+        logger.debug("Got nextSong ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.next()
     }
 
     fun leaveServer(event: MessageEvent) {
-        logger.debug("Got leaveServer event $event")
+        logger.debug("Got leaveServer ${event.debugString()}")
         sendMessage(event.channel, ":wave:")
         for (channel in client.connectedVoiceChannels) {
             if (channel.guild == event.guild) {
@@ -84,33 +87,33 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun pauseSong(event: MessageEvent) {
-        logger.debug("Got pauseSong event $event")
+        logger.debug("Got pauseSong ${event.debugString()}")
         guildAudioPlayer(event.guild).isPaused = true
     }
 
     fun resumeSong(event: MessageEvent) {
-        logger.debug("Got resumeSong event $event")
+        logger.debug("Got resumeSong ${event.debugString()}")
         guildAudioPlayer(event.guild).isPaused = false
     }
 
     fun clearPlaylist(event: MessageEvent) {
-        logger.debug("Got clearPlaylist event $event")
+        logger.debug("Got clearPlaylist ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.clear()
     }
 
     fun changeVolume(event: MessageEvent) {
-        logger.debug("Got changeVolume event $event")
+        logger.debug("Got changeVolume ${event.debugString()}")
         val volume = event.message.content.substringAfter(' ').toIntOrNull()
         volume?.let { guildAudioPlayer(event.guild).volume = it }
     }
 
     fun shuffleQueue(event: MessageEvent) {
-        logger.debug("Got shuffleQueue event $event")
+        logger.debug("Got shuffleQueue ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.shuffle()
     }
 
     fun showQueue(event: MessageEvent) {
-        logger.debug("Got showQueue event $event")
+        logger.debug("Got showQueue ${event.debugString()}")
         val guildAudioPlayer = guildAudioPlayer(event.guild)
         var i = 1
         val currentTrack = guildAudioPlayer.nowPlaying()
@@ -149,7 +152,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         event: MessageEvent,
         commands: List<String>
     ) {
-        logger.debug("Got clean event $event")
+        logger.debug("Got clean ${event.debugString()}")
         for (message in event.channel.fullMessageHistory) {
             if (message.isPinned) continue
             if (message.content.startsWith(config.prefix)) {
