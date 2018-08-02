@@ -22,9 +22,7 @@ class GuildMusicManager(manager: AudioPlayerManager) {
         player.addListener(scheduler)
     }
 
-    fun nowPlaying(): AudioTrack {
-        return player.playingTrack
-    }
-    
+    fun nowPlaying(): AudioTrack = player.playingTrack
+
     fun audioProvider() = AudioProvider(player)
 }
