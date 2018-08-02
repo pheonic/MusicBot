@@ -2,6 +2,7 @@ package xyz.pheonic.musicbot
 
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.api.events.EventSubscriber
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageDeleteEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEmbedEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
 
@@ -31,6 +32,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
         // and then another when the embed of the link loads, we ignore the second one since both events will have the
         // command.
         if (event is MessageEmbedEvent) return
+        if (event is MessageDeleteEvent) return
         val action = command.split(' ')[0].removePrefix(config.prefix)
         when (action) {
             "summon" -> musicBot.summon(event)
