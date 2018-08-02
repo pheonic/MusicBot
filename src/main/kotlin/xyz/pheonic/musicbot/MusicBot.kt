@@ -21,7 +21,7 @@ import java.util.*
 class MusicBot(private val client: IDiscordClient, private val config: Config) {
     private val logger = KotlinLogging.logger { }
 
-    private fun MessageEvent.debugString(): String =
+    private fun MessageEvent.debugString() =
         "Event [id=${this.messageID}, author=${this.author.name}, content=${this.message.content}]"
 
     private val playerManager: AudioPlayerManager
