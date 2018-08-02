@@ -112,20 +112,28 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     fun showQueue(event: MessageEvent) {
         logger.debug("Got showQueue event $event")
         val guildAudioPlayer = guildAudioPlayer(event.guild)
-        val iterator = guildAudioPlayer.scheduler.iterator()
         var i = 1
         val currentTrack = guildAudioPlayer.nowPlaying()
-        val stringBuilder =
-            StringBuilder(
-                "**Currently playing:** ${currentTrack.info.title} " +
-                        "(${millisToTime(currentTrack.position)} / ${millisToTime(currentTrack.duration)})\n\n"
-            )
-        while (iterator.hasNext() && stringBuilder.length < 1500) {
+        var totalTime = currentTrack.duration
+        val stringBuilder = StringBuilder("```")
+        stringBuilder.append(
+            "Currently playing: ${currentTrack.info.title} " +
+                    "(${millisToTime(currentTrack.position)} / ${millisToTime(currentTrack.duration)})\n\n"
+        )
+        val iterator = guildAudioPlayer.scheduler.iterator()
+        while (iterator.hasNext()) {
             val nextTrack = iterator.next()
-            stringBuilder.append("$i. ${nextTrack.info.title} (${millisToTime(nextTrack.duration)})\n")
-            i++
+            totalTime += nextTrack.duration
+            if (stringBuilder.length < 1500) {
+                stringBuilder.append("$i. ${nextTrack.info.title} (${millisToTime(nextTrack.duration)})\n")
+                i++
+            }
         }
-        stringBuilder.append("\nAnd ${guildAudioPlayer.scheduler.size() - i} more songs.")
+        if (i < guildAudioPlayer.scheduler.size()) {
+            stringBuilder.append("\nAnd ${guildAudioPlayer.scheduler.size() - i} more songs.")
+        }
+        stringBuilder.append("\nTotal queue time: ${millisToTime(totalTime)}")
+        stringBuilder.append("```")
         sendMessage(event.channel, stringBuilder.toString())
     }
 
