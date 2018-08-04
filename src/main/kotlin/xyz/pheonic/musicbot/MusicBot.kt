@@ -41,6 +41,8 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         voiceChannel?.join() ?: sendMessage(event.channel, "$summoner is not in a voice channel")
     }
 
+    private fun codeBlock(s: String) = "```$s```"
+
     private fun sendMessage(channel: IChannel, message: String) {
         MessageBuilder(client).withChannel(channel).withContent(message).build()
     }
@@ -48,9 +50,10 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     fun sendNowPlayingMessage(guild: IGuild, track: AudioTrack?) {
         guild.channels.filter { it.longID in config.channels }.forEach {
             val duration = millisToTime(track?.duration ?: 0)
-            sendMessage(it, "```Now playing: ${track?.info?.title} ($duration)```")
+            sendMessage(it, codeBlock("Now playing: ${track?.info?.title} ($duration)"))
         }
     }
+
 
     fun playSong(event: MessageEvent) {
         logger.debug("Got playSong ${event.debugString()}")
@@ -112,7 +115,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         val volume = event.message.content.substringAfter(' ').toIntOrNull()
         val guildAudioPlayer = guildAudioPlayer(event.guild)
         volume?.let { guildAudioPlayer.volume = it }
-        sendMessage(event.channel, "```Volume set to ${guildAudioPlayer.volume}```")
+        sendMessage(event.channel, codeBlock("Volume set to ${guildAudioPlayer.volume}"))
 
     }
 
@@ -127,11 +130,11 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         var i = 1
         val currentTrack = guildAudioPlayer.nowPlaying()
         if (currentTrack == null) {
-            sendMessage(event.channel, "```There are no songs in queue.```")
+            sendMessage(event.channel, codeBlock("There are no songs in queue."))
             return
         }
         var totalTime = currentTrack.duration
-        val stringBuilder = StringBuilder("```")
+        val stringBuilder = StringBuilder()
         stringBuilder.append(
             "Currently playing: ${currentTrack.info.title} " +
                     "(${millisToTime(currentTrack.position)} / ${millisToTime(currentTrack.duration)})\n\n"
@@ -149,8 +152,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
             stringBuilder.append("\nAnd ${guildAudioPlayer.scheduler.size() - i} more songs.")
         }
         stringBuilder.append("\nTotal queue time: ${millisToTime(totalTime)}")
-        stringBuilder.append("```")
-        sendMessage(event.channel, stringBuilder.toString())
+        sendMessage(event.channel, codeBlock(stringBuilder.toString()))
     }
 
     private fun millisToTime(millis: Long): String {
