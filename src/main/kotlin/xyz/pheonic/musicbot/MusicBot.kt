@@ -45,6 +45,13 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         MessageBuilder(client).withChannel(channel).withContent(message).build()
     }
 
+    fun sendNowPlayingMessage(guild: IGuild, track: AudioTrack?) {
+        guild.channels.filter { it.longID in config.channels }.forEach {
+            val duration = millisToTime(track?.duration ?: 0)
+            sendMessage(it, "```Now playing: ${track?.info?.title} ($duration)```")
+        }
+    }
+
     fun playSong(event: MessageEvent) {
         logger.debug("Got playSong ${event.debugString()}")
         val musicManager = guildAudioPlayer(event.guild)
@@ -63,7 +70,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     @Synchronized
     private fun guildAudioPlayer(guild: IGuild): GuildMusicManager {
         val guildId = guild.longID
-        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager))
+        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, guild, this))
         musicManagers[guildId] = musicManager
         guild.audioManager.audioProvider = musicManager.audioProvider()
         musicManager.volume = config.startVolume
