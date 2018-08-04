@@ -10,8 +10,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import mu.KotlinLogging
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.handle.obj.ActivityType
 import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IGuild
+import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.MessageBuilder
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -52,8 +54,12 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
             val duration = millisToTime(track?.duration ?: 0)
             sendMessage(it, codeBlock("Now playing: ${track?.info?.title} ($duration)"))
         }
+        client.changePresence(StatusType.ONLINE, ActivityType.LISTENING, "♪${track?.info?.title}♪")
     }
 
+    fun clearPresence() {
+        client.changePresence(StatusType.ONLINE)
+    }
 
     fun playSong(event: MessageEvent) {
         logger.debug("Got playSong ${event.debugString()}")

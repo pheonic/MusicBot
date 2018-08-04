@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import sx.blah.discord.handle.obj.IGuild
 
 class GuildMusicManager(manager: AudioPlayerManager, guild: IGuild, musicBot: MusicBot, config: Config) {
@@ -31,6 +32,10 @@ class GuildMusicManager(manager: AudioPlayerManager, guild: IGuild, musicBot: Mu
     inner class GuildEventNotifier(private val guild: IGuild, private val musicBot: MusicBot) : AudioEventAdapter() {
         override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
             musicBot.sendNowPlayingMessage(guild, track)
+        }
+
+        override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
+            musicBot.clearPresence()
         }
     }
 }
