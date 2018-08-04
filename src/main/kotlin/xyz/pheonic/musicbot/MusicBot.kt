@@ -133,7 +133,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
             sendMessage(event.channel, codeBlock("There are no songs in queue."))
             return
         }
-        var totalTime = currentTrack.duration
+        var totalTime = currentTrack.duration - currentTrack.position
         val stringBuilder = StringBuilder()
         stringBuilder.append(
             "Currently playing: ${currentTrack.info.title} " +
