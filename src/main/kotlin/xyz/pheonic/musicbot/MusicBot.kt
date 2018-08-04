@@ -190,8 +190,10 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         }
 
         override fun trackLoaded(track: AudioTrack?) {
-            sendMessage(event.channel, "Adding ${track?.info?.title} to queue")
-            musicManager.scheduler.queue(track!!)
+            track?.let {
+                sendMessage(event.channel, "Adding ${it.info.title} to queue")
+                musicManager.scheduler.queue(it)
+            }
         }
 
         override fun noMatches() {
