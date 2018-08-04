@@ -190,6 +190,29 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         logger.info("Finished cleaning")
     }
 
+    fun help(event: MessageEvent) {
+        val helpMessage = """
+            ```All commands start with: ${config.prefix}. For example ${config.prefix}summon.
+            The music bot can handle these formats: youtube, soundcloud, bandcamp, vimeo and direct links to music files.
+            In the case of direct links it can handle these file types: mp3, flac, wav, webm, mp4, ogg, aac, m3u and pls.
+            Commands:
+                summon - Summons the bot to the voice channel you are in.
+                disconnect - Disconnects the bot from the voice channel it is in.
+                play url - Adds this url to the queue.
+                skip - Skips the currently playing song.
+                pause - Pauses the currently playing song.
+                resume - Resumes the currently playing song.
+                queue - Displays a message with the songs currently in the queue. Due to discord's character limit this
+                        may not be all of the songs but the message will say the total amount of songs that can't be
+                        displayed as well as the total time of all of the songs in the queue.
+                shuffle - Shuffles the songs in the queue.
+                volume [number] - Sets the volume to the given number. If a number is not given will display the current
+                                  volume level.
+                musicbot-help - Displays this help message.```
+        """.trimIndent()
+        sendMessage(event.channel, helpMessage)
+    }
+
     inner class CustomAudioLoadResultHandler(
         private val event: MessageEvent,
         private val musicManager: GuildMusicManager,

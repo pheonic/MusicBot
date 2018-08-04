@@ -46,6 +46,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
             "shuffle" -> musicBot.shuffleQueue(event)
             "volume" -> musicBot.changeVolume(event)
             "clean" -> musicBot.clean(event, commands)
+            "musicbot-help" -> musicBot.help(event)
             else -> musicBot.notACommand(event)
         }
     }
