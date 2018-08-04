@@ -70,10 +70,9 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     @Synchronized
     private fun guildAudioPlayer(guild: IGuild): GuildMusicManager {
         val guildId = guild.longID
-        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, guild, this))
+        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, guild, this, config))
         musicManagers[guildId] = musicManager
         guild.audioManager.audioProvider = musicManager.audioProvider()
-        musicManager.volume = config.startVolume
         return musicManager
     }
 
@@ -111,7 +110,10 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     fun changeVolume(event: MessageEvent) {
         logger.debug("Got changeVolume ${event.debugString()}")
         val volume = event.message.content.substringAfter(' ').toIntOrNull()
-        volume?.let { guildAudioPlayer(event.guild).volume = it }
+        val guildAudioPlayer = guildAudioPlayer(event.guild)
+        volume?.let { guildAudioPlayer.volume = it }
+        sendMessage(event.channel, "```Volume set to ${guildAudioPlayer.volume}```")
+
     }
 
     fun shuffleQueue(event: MessageEvent) {
