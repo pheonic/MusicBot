@@ -192,7 +192,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
 
     fun help(event: MessageEvent) {
         val helpMessage = """
-            ```All commands start with: ${config.prefix}. For example ${config.prefix}summon.
+            All commands start with: ${config.prefix}. For example ${config.prefix}summon.
             The music bot can handle these formats: youtube, soundcloud, bandcamp, vimeo and direct links to music files.
             In the case of direct links it can handle these file types: mp3, flac, wav, webm, mp4, ogg, aac, m3u and pls.
             Commands:
@@ -208,9 +208,11 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 shuffle - Shuffles the songs in the queue.
                 volume [number] - Sets the volume to the given number. If a number is not given will display the current
                                   volume level.
-                musicbot-help - Displays this help message.```
+                clean - Deletes the bots messages and if the bot has the manage message permission will delete the
+                        messages sent to it
+                musicbot-help - Displays this help message.
         """.trimIndent()
-        sendMessage(event.channel, helpMessage)
+        sendMessage(event.channel, codeBlock(helpMessage))
     }
 
     inner class CustomAudioLoadResultHandler(
