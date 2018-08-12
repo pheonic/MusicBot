@@ -20,6 +20,11 @@ class GuildMusicManager(manager: AudioPlayerManager, guild: IGuild, musicBot: Mu
         set(value) {
             player.volume = value
         }
+    var repeatMode: RepeatMode
+        get() = scheduler.repeatMode
+        set(value) {
+            scheduler.repeatMode = value
+        }
 
     init {
         player.addListener(scheduler)

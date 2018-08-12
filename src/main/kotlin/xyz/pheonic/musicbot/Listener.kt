@@ -20,7 +20,11 @@ class Listener(client: IDiscordClient, private val config: Config) {
         "queue",
         "shuffle",
         "volume",
-        "clean"
+        "clean",
+        "musicbot-help",
+        "repeat-one",
+        "repeat-all",
+        "repeat-mode"
     )
 
     @EventSubscriber
@@ -47,6 +51,10 @@ class Listener(client: IDiscordClient, private val config: Config) {
             "volume" -> musicBot.changeVolume(event)
             "clean" -> musicBot.clean(event, commands)
             "musicbot-help" -> musicBot.help(event)
+            "repeat-one" -> musicBot.repeat(event, RepeatMode.ONE)
+            "repeat-all" -> musicBot.repeat(event, RepeatMode.ALL)
+            "repeat-off" -> musicBot.repeat(event, RepeatMode.OFF)
+            "repeat-mode" -> musicBot.repeatMode(event)
             else -> musicBot.notACommand(event)
         }
     }

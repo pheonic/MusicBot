@@ -9,6 +9,8 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
     private val queue: BlockingQueue<AudioTrack> = LinkedBlockingQueue()
+    var repeatMode: RepeatMode = RepeatMode.OFF
+
     fun queue(track: AudioTrack) {
         if (!player.startTrack(track, true)) {
             queue.offer(track)
@@ -24,7 +26,18 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
     }
 
     override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
-        if (endReason?.mayStartNext == true) next()
+        when (repeatMode) {
+            RepeatMode.OFF -> if (endReason?.mayStartNext == true) {
+                next()
+            }
+            RepeatMode.ONE -> this.player.startTrack(track?.makeClone(), false)
+            RepeatMode.ALL -> {
+                track?.makeClone()?.let { queue(it) }
+                if (endReason?.mayStartNext == true) {
+                    next()
+                }
+            }
+        }
     }
 
     fun clear() {

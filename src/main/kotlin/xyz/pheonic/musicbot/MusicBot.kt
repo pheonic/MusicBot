@@ -208,11 +208,25 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 shuffle - Shuffles the songs in the queue.
                 volume [number] - Sets the volume to the given number. If a number is not given will display the current
                                   volume level.
+                repeat-one - Sets the repeat mode to repeat the currently playing song.
+                repeat-all - Sets the repeat mode to repeat the whole queue. When ever a track ends it is added back to
+                             the end of the queue
+                repeat-off - Turns off repeat.
+                repeat-mode - Gets the current repeat mode.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it
                 musicbot-help - Displays this help message.
         """.trimIndent()
         sendMessage(event.channel, codeBlock(helpMessage))
+    }
+
+    fun repeat(event: MessageEvent, repeatMode: RepeatMode) {
+        guildAudioPlayer(event.guild).repeatMode = repeatMode
+        repeatMode(event)
+    }
+
+    fun repeatMode(event: MessageEvent) {
+        sendMessage(event.channel, codeBlock("Current repeat mode is: ${guildAudioPlayer(event.guild).repeatMode}"))
     }
 
     inner class CustomAudioLoadResultHandler(
