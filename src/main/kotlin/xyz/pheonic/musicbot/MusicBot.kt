@@ -174,20 +174,22 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         commands: List<String>
     ) {
         logger.debug("Got clean ${event.debugString()}")
-        for (message in event.channel.fullMessageHistory) {
-            if (message.isPinned) continue
-            if (message.content.startsWith(config.prefix)) {
-                val command = message.content.split(' ')[0].substring(config.prefix.length)
-                if (command in commands) {
+        Thread(Runnable {
+            for (message in event.channel.fullMessageHistory) {
+                if (message.isPinned) continue
+                if (message.content.startsWith(config.prefix)) {
+                    val command = message.content.split(' ')[0].substring(config.prefix.length)
+                    if (command in commands) {
+                        message.delete()
+                    }
+                }
+                if (message.author.longID == client.ourUser.longID) {
                     message.delete()
                 }
+                Thread.sleep(500)
             }
-            if (message.author.longID == client.ourUser.longID) {
-                message.delete()
-            }
-            Thread.sleep(500)
-        }
-        logger.info("Finished cleaning")
+            logger.info("Finished cleaning")
+        }).start()
     }
 
     fun help(event: MessageEvent) {
