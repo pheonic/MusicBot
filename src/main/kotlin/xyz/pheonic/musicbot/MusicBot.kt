@@ -208,11 +208,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 shuffle - Shuffles the songs in the queue.
                 volume [number] - Sets the volume to the given number. If a number is not given will display the current
                                   volume level.
-                repeat-one - Sets the repeat mode to repeat the currently playing song.
-                repeat-all - Sets the repeat mode to repeat the whole queue. When ever a track ends it is added back to
-                             the end of the queue
-                repeat-off - Turns off repeat.
-                repeat-mode - Gets the current repeat mode.
+                repeat [off|one|all] - Sets the current repeat mode or prints repeat mode if no argument is provided.
                 remove number - Removes the track at this point in the queue.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it
@@ -221,15 +217,24 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         sendMessage(event.channel, codeBlock(helpMessage))
     }
 
-    fun repeat(event: MessageEvent, repeatMode: RepeatMode) {
+    fun repeat(event: MessageEvent) {
         logger.debug("Got repeat ${event.debugString()}")
-        guildAudioPlayer(event.guild).repeatMode = repeatMode
-        repeatMode(event)
-    }
-
-    fun repeatMode(event: MessageEvent) {
-        logger.debug("Got repeatMode ${event.debugString()}")
-        sendMessage(event.channel, codeBlock("Current repeat mode is: ${guildAudioPlayer(event.guild).repeatMode}"))
+        val value = event.message.content.substringAfter(' ').toUpperCase()
+        val guildAudioPlayer = guildAudioPlayer(event.guild)
+        if (value.isBlank()) {
+            sendMessage(event.channel, codeBlock("Current repeat mode is: ${guildAudioPlayer.repeatMode}"))
+        }
+        val repeatMode = try {
+            RepeatMode.valueOf(value)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+        if (repeatMode != null) {
+            guildAudioPlayer.repeatMode = repeatMode
+            sendMessage(event.channel, codeBlock("Set repeat mode is: $repeatMode"))
+        } else {
+            sendMessage(event.channel, codeBlock("Cannot find valid mode for $value. Use one of off, one, all"))
+        }
     }
 
     fun remove(event: MessageEvent) {
