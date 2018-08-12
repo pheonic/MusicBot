@@ -22,9 +22,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
         "volume",
         "clean",
         "musicbot-help",
-        "repeat-one",
-        "repeat-all",
-        "repeat-mode",
+        "repeat",
         "remove"
     )
 
