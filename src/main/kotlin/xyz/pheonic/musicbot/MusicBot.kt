@@ -213,6 +213,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                              the end of the queue
                 repeat-off - Turns off repeat.
                 repeat-mode - Gets the current repeat mode.
+                remove number - Removes the track at this point in the queue.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it
                 musicbot-help - Displays this help message.
@@ -221,12 +222,23 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     }
 
     fun repeat(event: MessageEvent, repeatMode: RepeatMode) {
+        logger.debug("Got repeat ${event.debugString()}")
         guildAudioPlayer(event.guild).repeatMode = repeatMode
         repeatMode(event)
     }
 
     fun repeatMode(event: MessageEvent) {
+        logger.debug("Got repeatMode ${event.debugString()}")
         sendMessage(event.channel, codeBlock("Current repeat mode is: ${guildAudioPlayer(event.guild).repeatMode}"))
+    }
+
+    fun remove(event: MessageEvent) {
+        logger.debug("Got remove ${event.debugString()}")
+        val trackNum = event.message.content.substringAfter(' ').toIntOrNull()
+        trackNum?.let {
+            val removed = guildAudioPlayer(event.guild).scheduler.remove(it)
+            sendMessage(event.channel, codeBlock("Removing ${removed?.info?.title} from the queue."))
+        }
     }
 
     inner class CustomAudioLoadResultHandler(

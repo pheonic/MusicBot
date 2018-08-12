@@ -55,4 +55,12 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
     fun size(): Int {
         return queue.size
     }
+
+    fun remove(i: Int): AudioTrack? {
+        val list = queue.toMutableList()
+        val removed = list.removeAt(i - 1)
+        queue.clear()
+        queue.addAll(list)
+        return removed
+    }
 }
