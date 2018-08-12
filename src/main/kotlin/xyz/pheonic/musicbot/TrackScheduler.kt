@@ -32,10 +32,10 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
             }
             RepeatMode.ONE -> this.player.startTrack(track?.makeClone(), false)
             RepeatMode.ALL -> {
-                track?.makeClone()?.let { queue(it) }
                 if (endReason?.mayStartNext == true) {
                     next()
                 }
+                track?.makeClone()?.let { queue(it) }
             }
         }
     }
