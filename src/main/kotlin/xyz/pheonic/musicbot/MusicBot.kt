@@ -221,21 +221,22 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
 
     fun repeat(event: MessageEvent) {
         logger.debug("Got repeat ${event.debugString()}")
-        val value = event.message.content.substringAfter(' ').toUpperCase()
+        val value = event.message.content.removePrefix("${config.prefix}repeat").trim().toUpperCase()
         val guildAudioPlayer = guildAudioPlayer(event.guild)
         if (value.isBlank()) {
             sendMessage(event.channel, codeBlock("Current repeat mode is: ${guildAudioPlayer.repeatMode}"))
-        }
-        val repeatMode = try {
-            RepeatMode.valueOf(value)
-        } catch (e: IllegalArgumentException) {
-            null
-        }
-        if (repeatMode != null) {
-            guildAudioPlayer.repeatMode = repeatMode
-            sendMessage(event.channel, codeBlock("Set repeat mode is: $repeatMode"))
         } else {
-            sendMessage(event.channel, codeBlock("Cannot find valid mode for $value. Use one of off, one, all"))
+            val repeatMode = try {
+                RepeatMode.valueOf(value)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+            if (repeatMode != null) {
+                guildAudioPlayer.repeatMode = repeatMode
+                sendMessage(event.channel, codeBlock("Set repeat mode to: $repeatMode"))
+            } else {
+                sendMessage(event.channel, codeBlock("Cannot find valid mode for $value. Use one of off, one, all"))
+            }
         }
     }
 
