@@ -134,6 +134,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     fun shuffleQueue(event: MessageEvent) {
         logger.debug("Got shuffleQueue ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.shuffle()
+        sendMessage(event.channel, codeBlock("Queue shuffled"))
     }
 
     fun showQueue(event: MessageEvent) {
