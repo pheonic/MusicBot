@@ -26,11 +26,10 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     private fun MessageEvent.debugString() =
         "Event [id=${this.messageID}, author=${this.author.name}, content=${this.message.content}]"
 
-    private val playerManager: AudioPlayerManager
+    private var playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
     private val musicManagers: MutableMap<Long, GuildMusicManager>
 
     init {
-        playerManager = DefaultAudioPlayerManager()
         musicManagers = HashMap()
         AudioSourceManagers.registerRemoteSources(playerManager)
         AudioSourceManagers.registerLocalSource(playerManager)
@@ -220,8 +219,9 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 repeat [off|one|all] - Sets the current repeat mode or prints repeat mode if no argument is provided.
                 remove number - Removes the track at this point in the queue.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
-                        messages sent to it
+                        messages sent to it.
                 musicbot-help - Displays this help message.
+                restart - Reinitializes the bot, use in case the bot doesn't seem to be responding correctly.
         """.trimIndent()
         sendMessage(event.channel, codeBlock(helpMessage))
     }
@@ -254,6 +254,18 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
             val removed = guildAudioPlayer(event.guild).scheduler.remove(it)
             sendMessage(event.channel, codeBlock("Removing ${removed?.info?.title} from the queue."))
         }
+    }
+
+    fun restart(event: MessageEvent) {
+        logger.debug("Got restart ${event.debugString()}")
+        for (channel in client.connectedVoiceChannels) {
+            channel.leave()
+        }
+        playerManager.shutdown()
+        musicManagers.clear()
+        playerManager = DefaultAudioPlayerManager()
+        AudioSourceManagers.registerLocalSource(playerManager)
+        AudioSourceManagers.registerRemoteSources(playerManager)
     }
 
     inner class CustomAudioLoadResultHandler(

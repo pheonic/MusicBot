@@ -23,7 +23,8 @@ class Listener(client: IDiscordClient, private val config: Config) {
         "clean",
         "musicbot-help",
         "repeat",
-        "remove"
+        "remove",
+        "restart"
     )
 
     @EventSubscriber
@@ -52,6 +53,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
             "musicbot-help" -> musicBot.help(event)
             "repeat" -> musicBot.repeat(event)
             "remove" -> musicBot.remove(event)
+            "restart" -> musicBot.restart(event)
             else -> musicBot.notACommand(event)
         }
     }
