@@ -96,6 +96,12 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         for (channel in client.connectedVoiceChannels) {
             if (channel.guild == event.guild) {
                 channel.leave()
+                val guildAudioPlayer = guildAudioPlayer(event.guild)
+                val currentMode = guildAudioPlayer.repeatMode
+                guildAudioPlayer.repeatMode = RepeatMode.OFF
+                guildAudioPlayer.scheduler.clear()
+                guildAudioPlayer.scheduler.next()
+                guildAudioPlayer.repeatMode = currentMode
                 break
             }
         }
