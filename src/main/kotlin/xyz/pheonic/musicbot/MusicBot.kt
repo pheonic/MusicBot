@@ -120,6 +120,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     fun clearPlaylist(event: MessageEvent) {
         logger.debug("Got clearPlaylist ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.clear()
+        sendMessage(event.channel, codeBlock("Cleared queue"))
     }
 
     fun changeVolume(event: MessageEvent) {
@@ -128,7 +129,6 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         val guildAudioPlayer = guildAudioPlayer(event.guild)
         volume?.let { guildAudioPlayer.volume = it }
         sendMessage(event.channel, codeBlock("Volume set to ${guildAudioPlayer.volume}"))
-
     }
 
     fun shuffleQueue(event: MessageEvent) {
