@@ -62,6 +62,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
 
     fun playSong(event: MessageEvent) {
         logger.debug("Got playSong ${event.debugString()}")
+        summon(event)
         val musicManager = guildAudioPlayer(event.guild)
         val trackUrl = event.message.content.substringAfter(' ')
         playerManager.loadItemOrdered(
