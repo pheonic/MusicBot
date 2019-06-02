@@ -90,9 +90,9 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         return musicManager
     }
 
-    fun nextSong(event: MessageEvent) {
-        logger.debug("Got nextSong ${event.debugString()}")
-        guildAudioPlayer(event.guild).scheduler.next()
+    fun skipSong(event: MessageEvent) {
+        logger.debug("Got skipSong ${event.debugString()}")
+        guildAudioPlayer(event.guild).scheduler.skip()
     }
 
     fun leaveServer(event: MessageEvent) {
@@ -104,8 +104,7 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 val guildAudioPlayer = guildAudioPlayer(event.guild)
                 val currentMode = guildAudioPlayer.repeatMode
                 guildAudioPlayer.repeatMode = RepeatMode.OFF
-                guildAudioPlayer.scheduler.clear()
-                guildAudioPlayer.scheduler.next()
+                guildAudioPlayer.scheduler.clearAll()
                 guildAudioPlayer.repeatMode = currentMode
                 break
             }
@@ -223,6 +222,8 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 volume [number] - Sets the volume to the given number. If a number is not given will display the current
                                   volume level.
                 repeat [off|one|all] - Sets the current repeat mode or prints repeat mode if no argument is provided.
+                                       NB: If repeat mode is set to one then skip becomes restart song. If you want the
+                                       song to not play again either change the repeat mode or do clear-all.
                 remove number - Removes the track at this point in the queue.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it.

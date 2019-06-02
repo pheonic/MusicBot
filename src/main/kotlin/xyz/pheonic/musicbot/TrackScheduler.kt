@@ -17,8 +17,18 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
         }
     }
 
-    fun next() {
+    private fun next() {
         player.startTrack(queue.poll(), false)
+    }
+
+    fun skip() {
+        if (repeatMode == RepeatMode.ONE) {
+            val track = player.playingTrack?.makeClone()
+            player.stopTrack()
+            player.startTrack(track, false)
+        } else {
+            next()
+        }
     }
 
     fun clearAll() {
@@ -32,7 +42,6 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
 
     override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
         // Stopped means the player should completely stop even if there are other songs in the queue
-        logger.debug("End Reason: $endReason")
         if (endReason == AudioTrackEndReason.STOPPED) {
             return
         }
@@ -40,7 +49,7 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
             RepeatMode.OFF -> if (endReason?.mayStartNext == true) {
                 next()
             }
-            RepeatMode.ONE -> this.player.startTrack(track?.makeClone(), false)
+            RepeatMode.ONE -> this.player.startTrack(track?.makeClone(), true)
             RepeatMode.ALL -> {
                 if (endReason?.mayStartNext == true) {
                     next()

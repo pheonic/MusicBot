@@ -42,7 +42,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
             "summon" -> musicBot.summon(event)
             "disconnect" -> musicBot.leaveServer(event)
             "play" -> musicBot.playSong(event)
-            "skip" -> musicBot.nextSong(event)
+            "skip" -> musicBot.skipSong(event)
             "pause" -> musicBot.pauseSong(event)
             "resume" -> musicBot.resumeSong(event)
             "clear" -> musicBot.clearPlaylist(event)
