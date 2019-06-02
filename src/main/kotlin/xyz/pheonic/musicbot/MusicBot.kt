@@ -15,6 +15,7 @@ import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.StatusType
 import sx.blah.discord.util.MessageBuilder
+import sx.blah.discord.util.MissingPermissionsException
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -45,7 +46,11 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
     private fun codeBlock(s: String) = "```$s```"
 
     private fun sendMessage(channel: IChannel, message: String) {
-        MessageBuilder(client).withChannel(channel).withContent(message).build()
+        try {
+            MessageBuilder(client).withChannel(channel).withContent(message).build()
+        } catch (e: MissingPermissionsException) {
+            logger.warn("Don't have permission to post in ${channel.name}")
+        }
     }
 
     fun sendNowPlayingMessage(guild: IGuild, track: AudioTrack?) {
