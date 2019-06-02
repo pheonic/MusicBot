@@ -24,7 +24,8 @@ class Listener(client: IDiscordClient, private val config: Config) {
         "musicbot-help",
         "repeat",
         "remove",
-        "restart"
+        "restart",
+        "clear-all"
     )
 
     @EventSubscriber
