@@ -226,6 +226,8 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
                 remove number - Removes the track at this point in the queue.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it.
+                clear - Clears the queue, doesn't clear the currently playing song.
+                clear-all - Clears the queue and the currently playing song. (Bypasses repeat)
                 musicbot-help - Displays this help message.
                 restart - Reinitializes the bot, use in case the bot doesn't seem to be responding correctly.
         """.trimIndent()
@@ -272,6 +274,12 @@ class MusicBot(private val client: IDiscordClient, private val config: Config) {
         playerManager = DefaultAudioPlayerManager()
         AudioSourceManagers.registerLocalSource(playerManager)
         AudioSourceManagers.registerRemoteSources(playerManager)
+    }
+
+    fun clearAll(event: MessageEvent) {
+        logger.debug("Got clear-all ${event.debugString()}")
+        guildAudioPlayer(event.guild).scheduler.clearAll()
+        sendMessage(event.channel, codeBlock("Cleared all"))
     }
 
     inner class CustomAudioLoadResultHandler(

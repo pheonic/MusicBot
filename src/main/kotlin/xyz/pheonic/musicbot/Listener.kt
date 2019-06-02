@@ -46,6 +46,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
             "pause" -> musicBot.pauseSong(event)
             "resume" -> musicBot.resumeSong(event)
             "clear" -> musicBot.clearPlaylist(event)
+            "clear-all" -> musicBot.clearAll(event)
             "queue" -> musicBot.showQueue(event)
             "shuffle" -> musicBot.shuffleQueue(event)
             "volume" -> musicBot.changeVolume(event)

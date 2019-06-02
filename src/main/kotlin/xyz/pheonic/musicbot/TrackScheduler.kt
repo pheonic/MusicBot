@@ -21,11 +21,21 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
         player.startTrack(queue.poll(), false)
     }
 
+    fun clearAll() {
+        queue.clear()
+        player.stopTrack()
+    }
+
     fun iterator(): Iterator<AudioTrack> {
         return queue.iterator()
     }
 
     override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
+        // Stopped means the player should completely stop even if there are other songs in the queue
+        logger.debug("End Reason: $endReason")
+        if (endReason == AudioTrackEndReason.STOPPED) {
+            return
+        }
         when (repeatMode) {
             RepeatMode.OFF -> if (endReason?.mayStartNext == true) {
                 next()
