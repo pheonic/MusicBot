@@ -1,5 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
@@ -41,18 +42,26 @@ dependencies {
         name = "logback-classic",
         version = "1.2.3"
     )
-    testCompile(
-        group = "junit",
-        name = "junit",
-        version = "4.12"
+    testImplementation(
+        group = "org.junit.jupiter",
+        name = "junit-jupiter",
+        version = "5.4.2"
     )
 }
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }
 
 val fatJar = task("fatJar", type = Jar::class) {
