@@ -3,7 +3,7 @@ import org.gradle.jvm.tasks.Jar
 
 plugins {
     java
-    kotlin("jvm") version "1.2.51"
+    kotlin("jvm") version "1.3.31"
 }
 
 group = "xyz.pheonic"
