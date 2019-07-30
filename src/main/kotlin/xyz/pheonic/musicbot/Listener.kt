@@ -5,6 +5,7 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageDeleteEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEmbedEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessagePinEvent
 
 
 class Listener(client: IDiscordClient, private val config: Config) {
@@ -38,6 +39,7 @@ class Listener(client: IDiscordClient, private val config: Config) {
         // command.
         if (event is MessageEmbedEvent) return
         if (event is MessageDeleteEvent) return
+        if (event is MessagePinEvent) return
         val action = command.split(' ')[0].removePrefix(config.prefix)
         when (action) {
             "summon" -> musicBot.summon(event)
