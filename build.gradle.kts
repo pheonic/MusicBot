@@ -18,14 +18,14 @@ repositories {
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile(
-        group = "com.discord4j",
-        name = "Discord4J",
-        version = "2.10.1"
+        group = "net.dv8tion",
+        name = "JDA",
+        version = "4.0.0_59"
     )
     compile(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.19"
+        version = "1.3.25"
     )
     compile(
         group = "ch.qos.logback",

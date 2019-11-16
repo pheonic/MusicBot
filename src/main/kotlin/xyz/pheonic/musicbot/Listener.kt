@@ -1,14 +1,12 @@
 package xyz.pheonic.musicbot
 
-import sx.blah.discord.api.IDiscordClient
-import sx.blah.discord.api.events.EventSubscriber
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageDeleteEvent
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEmbedEvent
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessagePinEvent
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent
+import net.dv8tion.jda.api.events.message.MessageEmbedEvent
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-
-class Listener(client: IDiscordClient, private val config: Config) {
+class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
     private val musicBot = MusicBot(client, config)
     private val commands = listOf(
         "summon",
@@ -29,17 +27,16 @@ class Listener(client: IDiscordClient, private val config: Config) {
         "clear-all"
     )
 
-    @EventSubscriber
-    fun handleEvent(event: MessageEvent) {
-        val command = event.message.content
+    override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
+        val command = event.message.contentDisplay
         if (!command.startsWith(config.prefix)) return
-        if (event.channel.longID !in config.channels) return
+        if (event.channel.idLong !in config.channels) return
         // When discord receives a message with a url in it it receives one event when the message is initially sent
         // and then another when the embed of the link loads, we ignore the second one since both events will have the
         // command.
         if (event is MessageEmbedEvent) return
         if (event is MessageDeleteEvent) return
-        if (event is MessagePinEvent) return
+//        if (event is MessagePinEvent) return TODO
         val action = command.split(' ')[0].removePrefix(config.prefix)
         when (action) {
             "summon" -> musicBot.summon(event)

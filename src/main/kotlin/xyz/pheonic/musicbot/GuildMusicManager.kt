@@ -5,9 +5,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
-import sx.blah.discord.handle.obj.IGuild
+import net.dv8tion.jda.api.entities.Guild
 
-class GuildMusicManager(manager: AudioPlayerManager, guild: IGuild, musicBot: MusicBot, config: Config) {
+class GuildMusicManager(manager: AudioPlayerManager, guild: Guild, musicBot: MusicBot, config: Config) {
     private val player: AudioPlayer = manager.createPlayer()
     val scheduler: TrackScheduler = TrackScheduler(player)
     var isPaused: Boolean
@@ -33,8 +33,12 @@ class GuildMusicManager(manager: AudioPlayerManager, guild: IGuild, musicBot: Mu
     }
 
     fun nowPlaying(): AudioTrack? = player.playingTrack ?: null
-    fun audioProvider() = AudioProvider(player)
-    inner class GuildEventNotifier(private val guild: IGuild, private val musicBot: MusicBot) : AudioEventAdapter() {
+
+    fun getSendHandler(): AudioPlayerSendHandler {
+        return AudioPlayerSendHandler(player)
+    }
+
+    inner class GuildEventNotifier(private val guild: Guild, private val musicBot: MusicBot) : AudioEventAdapter() {
         override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
             musicBot.sendNowPlayingMessage(guild, track)
         }
