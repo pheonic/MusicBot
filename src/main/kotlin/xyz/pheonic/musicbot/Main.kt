@@ -1,26 +1,25 @@
 package xyz.pheonic.musicbot
 
 import mu.KotlinLogging
-import sx.blah.discord.api.ClientBuilder
-import sx.blah.discord.api.IDiscordClient
+import net.dv8tion.jda.api.AccountType
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDABuilder
 
 val logger = KotlinLogging.logger { }
-fun main(args: Array<String>) {
+fun main() {
     logger.debug("Starting...")
     val config = Config()
     val client = createClient(config)
     val listener = createListener(config, client)
-    client.dispatcher.registerListener(listener)
+    client.addEventListener(listener)
 }
 
-fun createListener(config: Config, client: IDiscordClient): Listener {
+fun createListener(config: Config, client: JDA): Listener {
     logger.debug("Creating listener")
     return Listener(client, config)
 }
 
-fun createClient(config: Config): IDiscordClient {
+fun createClient(config: Config): JDA {
     logger.debug("Creating client")
-    val clientBuilder = ClientBuilder()
-    clientBuilder.withToken(config.token)
-    return checkNotNull(clientBuilder.login())
+    return JDABuilder(AccountType.BOT).setToken(config.token).build()
 }
