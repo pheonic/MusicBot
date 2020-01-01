@@ -183,12 +183,12 @@ class MusicBot(private val client: JDA, private val config: Config) {
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    fun clean(
-        event: GuildMessageReceivedEvent,
-        commands: List<String>
-    ) {
-        logger.debug("Got clean ${event.debugString()}")
-        //TODO
+//    fun clean(
+//        event: GuildMessageReceivedEvent,
+//        commands: List<String>
+//    ) {
+//        logger.debug("Got clean ${event.debugString()}")
+//        //TODO
 //        Thread(Runnable {
 //            for (message in event.channel.iterableHistory) {
 //                if (message.isPinned) continue
@@ -205,7 +205,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
 //            }
 //            logger.info("Finished cleaning")
 //        }).start()
-    }
+//    }
 
     fun help(event: GuildMessageReceivedEvent) {
         val helpMessage = """

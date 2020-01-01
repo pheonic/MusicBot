@@ -1,10 +1,11 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     java
-    kotlin("jvm") version "1.3.31"
+    kotlin("jvm") version "1.3.41"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "xyz.pheonic"
@@ -25,7 +26,7 @@ dependencies {
     compile(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.25"
+        version = "1.3.32"
     )
     compile(
         group = "ch.qos.logback",
@@ -47,6 +48,11 @@ dependencies {
         name = "junit-jupiter",
         version = "5.4.2"
     )
+    compile(
+        group = "com.github.jengelman.gradle.plugins",
+        name = "shadow",
+        version = "5.2.0"
+    )
 }
 
 configure<JavaPluginConvention> {
@@ -57,6 +63,12 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+tasks.withType<ShadowJar>() {
+    manifest {
+        attributes["Main-Class"] = "xyz.pheonic.musicbot.MainKt"
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
@@ -64,19 +76,25 @@ tasks.withType<Test> {
     }
 }
 
-val fatJar = task("fatJar", type = Jar::class) {
-    baseName = "${project.name}-fat"
-    manifest {
-        attributes["Implementation-Title"] = "xyz.pheonic.MusicBot"
-        attributes["Implementation-Version"] = version
-        attributes["Main-Class"] = "xyz.pheonic.musicbot.MainKt"
-    }
-    from(configurations.runtime.map { if (it.isDirectory) it else zipTree(it) })
-    with(tasks["jar"] as CopySpec)
-}
+//val fatJar = task("fatJar", type = Jar::class) {
+//    baseName = "${project.name}-fat"
+//    manifest {
+//        attributes["Implementation-Title"] = "xyz.pheonic.MusicBot"
+//        attributes["Implementation-Version"] = version
+//        attributes["Main-Class"] = "xyz.pheonic.musicbot.MainKt"
+//    }
+//    from(configurations.runtime.resolve().map {
+//        if (it.isDirectory) it else {
+//
+//            zipTree(it)
+//
+//        }
+//    })
+//    with(tasks["jar"] as CopySpec)
+//}
 
 tasks {
     "build" {
-        dependsOn(fatJar)
+        dependsOn(shadowJar)
     }
 }

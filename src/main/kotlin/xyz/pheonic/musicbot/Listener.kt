@@ -3,6 +3,7 @@ package xyz.pheonic.musicbot
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -36,7 +37,7 @@ class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
         // command.
         if (event is MessageEmbedEvent) return
         if (event is MessageDeleteEvent) return
-//        if (event is MessagePinEvent) return TODO
+        if (event is MessageUpdateEvent) return
         val action = command.split(' ')[0].removePrefix(config.prefix)
         when (action) {
             "summon" -> musicBot.summon(event)
@@ -50,7 +51,7 @@ class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
             "queue" -> musicBot.showQueue(event)
             "shuffle" -> musicBot.shuffleQueue(event)
             "volume" -> musicBot.changeVolume(event)
-            "clean" -> musicBot.clean(event, commands)
+//            "clean" -> musicBot.clean(event, commands)
             "musicbot-help" -> musicBot.help(event)
             "repeat" -> musicBot.repeat(event)
             "remove" -> musicBot.remove(event)
