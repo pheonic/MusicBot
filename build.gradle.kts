@@ -21,12 +21,12 @@ dependencies {
     compile(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.0.0_59"
+        version = "4.1.1_108"
     )
     compile(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.32"
+        version = "1.3.34"
     )
     compile(
         group = "ch.qos.logback",
