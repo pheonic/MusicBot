@@ -53,18 +53,6 @@ class MusicBot(private val client: JDA, private val config: Config) {
         }
     }
 
-    fun sendNowPlayingMessage(guild: Guild, track: AudioTrack?) {
-        guild.textChannels.filter { it.idLong in config.channels }.forEach {
-            val duration = millisToTime(track?.duration ?: 0)
-            sendMessage(it, codeBlock("Now playing: ${track?.info?.title} ($duration)"))
-        }
-//        client.changePresence(StatusType.ONLINE, Activity.ActivityType.LISTENING, "♪${track?.info?.title}♪")
-    }
-
-    fun clearPresence() {
-//        client.changePresence(StatusType.ONLINE)
-    }
-
     fun playSong(event: GuildMessageReceivedEvent) {
         logger.debug("Got playSong ${event.debugString()}")
         if (musicManagers[event.guild.idLong] == null) {
