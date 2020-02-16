@@ -2,12 +2,9 @@ package xyz.pheonic.musicbot
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
-import net.dv8tion.jda.api.entities.Guild
 
-class GuildMusicManager(manager: AudioPlayerManager, guild: Guild, musicBot: MusicBot, config: Config) {
+class GuildMusicManager(manager: AudioPlayerManager, config: Config) {
     private val player: AudioPlayer = manager.createPlayer()
     val scheduler: TrackScheduler = TrackScheduler(player)
     var isPaused: Boolean
@@ -28,7 +25,6 @@ class GuildMusicManager(manager: AudioPlayerManager, guild: Guild, musicBot: Mus
 
     init {
         player.addListener(scheduler)
-        player.addListener(GuildEventNotifier(guild, musicBot))
         volume = config.startVolume
     }
 
@@ -36,15 +32,5 @@ class GuildMusicManager(manager: AudioPlayerManager, guild: Guild, musicBot: Mus
 
     fun getSendHandler(): AudioPlayerSendHandler {
         return AudioPlayerSendHandler(player)
-    }
-
-    inner class GuildEventNotifier(private val guild: Guild, private val musicBot: MusicBot) : AudioEventAdapter() {
-        override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
-            musicBot.sendNowPlayingMessage(guild, track)
-        }
-
-        override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
-            musicBot.clearPresence()
-        }
     }
 }

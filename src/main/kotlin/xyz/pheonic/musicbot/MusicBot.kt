@@ -74,10 +74,9 @@ class MusicBot(private val client: JDA, private val config: Config) {
     @Synchronized
     private fun guildAudioPlayer(guild: Guild): GuildMusicManager {
         val guildId = guild.idLong
-        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, guild, this, config))
+        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, config))
         musicManagers[guildId] = musicManager
         guild.audioManager.sendingHandler = musicManager.getSendHandler()
-//        guild.guild.= musicManager . audioProvider ()
         return musicManager
     }
 
