@@ -67,7 +67,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
 
     fun playSong(event: GuildMessageReceivedEvent) {
         logger.debug("Got playSong ${event.debugString()}")
-        if (event.guild !in client.audioManagers.map { it.guild }) {
+        if (musicManagers[event.guild.idLong] == null) {
             summon(event)
         }
         val musicManager = guildAudioPlayer(event.guild)
@@ -104,11 +104,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
         for (audioManager in client.audioManagers) {
             if (audioManager.guild == event.guild) {
                 audioManager.closeAudioConnection()
-                val guildAudioPlayer = guildAudioPlayer(event.guild)
-                val currentMode = guildAudioPlayer.repeatMode
-                guildAudioPlayer.repeatMode = RepeatMode.OFF
-                guildAudioPlayer.scheduler.clearAll()
-                guildAudioPlayer.repeatMode = currentMode
+                musicManagers.remove(event.guild.idLong)
                 break
             }
         }
@@ -208,6 +204,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
 //    }
 
     fun help(event: GuildMessageReceivedEvent) {
+        logger.debug("Got help ${event.debugString()}")
         val helpMessage = """
             All commands start with: ${config.prefix}. For example ${config.prefix}summon.
             The music bot can handle these formats: youtube, soundcloud, bandcamp, vimeo and direct links to music files.
