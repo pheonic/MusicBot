@@ -51,7 +51,7 @@ class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
             "queue" -> musicBot.showQueue(event)
             "shuffle" -> musicBot.shuffleQueue(event)
             "volume" -> musicBot.changeVolume(event)
-//            "clean" -> musicBot.clean(event, commands)
+            "clean" -> musicBot.clean(event, commands)
             "musicbot-help" -> musicBot.help(event)
             "repeat" -> musicBot.repeat(event)
             "remove" -> musicBot.remove(event)

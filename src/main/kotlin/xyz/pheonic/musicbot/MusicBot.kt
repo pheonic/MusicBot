@@ -179,29 +179,28 @@ class MusicBot(private val client: JDA, private val config: Config) {
         return "%02d:%02d".format(minutes, seconds)
     }
 
-//    fun clean(
-//        event: GuildMessageReceivedEvent,
-//        commands: List<String>
-//    ) {
-//        logger.debug("Got clean ${event.debugString()}")
-//        //TODO
-//        Thread(Runnable {
-//            for (message in event.channel.iterableHistory) {
-//                if (message.isPinned) continue
-//                if (message.content.startsWith(config.prefix)) {
-//                    val command = message.content.split(' ')[0].substring(config.prefix.length)
-//                    if (command in commands) {
-//                        message.delete()
-//                    }
-//                }
-//                if (message.author.longID == client.ourUser.longID) {
-//                    message.delete()
-//                }
-//                Thread.sleep(500)
-//            }
-//            logger.info("Finished cleaning")
-//        }).start()
-//    }
+    fun clean(
+        event: GuildMessageReceivedEvent,
+        commands: List<String>
+    ) {
+        logger.debug("Got clean ${event.debugString()}")
+        Thread(Runnable {
+            for (message in event.channel.iterableHistory) {
+                if (message.isPinned) continue
+                if (message.contentDisplay.startsWith(config.prefix)) {
+                    val command = message.contentDisplay.split(' ')[0].substring(config.prefix.length)
+                    if (command in commands) {
+                        message.delete().reason("MusicBot Clean command").queue()
+                    }
+                }
+                if (message.author.idLong == client.selfUser.idLong) {
+                    message.delete().reason("MusicBot Clean command").queue()
+                }
+                Thread.sleep(500)
+            }
+            logger.info("Finished cleaning")
+        }).start()
+    }
 
     fun help(event: GuildMessageReceivedEvent) {
         logger.debug("Got help ${event.debugString()}")
