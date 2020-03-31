@@ -91,6 +91,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
         for (audioManager in client.audioManagers) {
             if (audioManager.guild == event.guild) {
                 audioManager.closeAudioConnection()
+                guildAudioPlayer(event.guild).scheduler.clearAll()
                 musicManagers.remove(event.guild.idLong)
                 break
             }
