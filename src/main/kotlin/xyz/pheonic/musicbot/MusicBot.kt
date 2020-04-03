@@ -213,6 +213,7 @@ class MusicBot(private val client: JDA, private val config: Config) {
                                        NB: If repeat mode is set to one then skip becomes restart song. If you want the
                                        song to not play again either change the repeat mode or do clear-all.
                 remove number - Removes the track at this point in the queue.
+                elevate number - Elevates the track at this point in the queue to the top.
                 clean - Deletes the bots messages and if the bot has the manage message permission will delete the
                         messages sent to it.
                 clear - Clears the queue, doesn't clear the currently playing song.
@@ -269,6 +270,15 @@ class MusicBot(private val client: JDA, private val config: Config) {
         logger.debug("Got clear-all ${event.debugString()}")
         guildAudioPlayer(event.guild).scheduler.clearAll()
         sendMessage(event.channel, codeBlock("Cleared all"))
+    }
+
+    fun elevate(event: GuildMessageReceivedEvent) {
+        logger.debug("Got elevate ${event.debugString()}")
+        val trackNum = event.message.contentDisplay.substringAfter(' ').toIntOrNull()
+        trackNum?.let {
+            val elevated = guildAudioPlayer(event.guild).scheduler.elevate(it)
+            sendMessage(event.channel, codeBlock("Elevated ${elevated?.info?.title} to the top of the queue."))
+        }
     }
 
     inner class CustomAudioLoadResultHandler(

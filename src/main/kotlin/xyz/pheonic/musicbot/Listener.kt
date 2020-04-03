@@ -25,7 +25,8 @@ class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
         "repeat",
         "remove",
         "restart",
-        "clear-all"
+        "clear-all",
+        "elevate"
     )
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
@@ -56,6 +57,7 @@ class Listener(client: JDA, private val config: Config) : ListenerAdapter() {
             "repeat" -> musicBot.repeat(event)
             "remove" -> musicBot.remove(event)
             "restart" -> musicBot.restart(event)
+            "elevate" -> musicBot.elevate(event)
             else -> musicBot.notACommand(event)
         }
     }

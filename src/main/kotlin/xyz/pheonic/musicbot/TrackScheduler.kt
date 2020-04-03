@@ -82,4 +82,13 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
         queue.addAll(list)
         return removed
     }
+
+    fun elevate(i: Int): AudioTrack? {
+        val list = queue.toMutableList()
+        val elevated = list.removeAt(i - 1)
+        queue.clear()
+        queue.add(elevated)
+        queue.addAll(list)
+        return elevated
+    }
 }
