@@ -74,7 +74,10 @@ class MusicBot(private val client: JDA, private val config: Config) {
     @Synchronized
     private fun guildAudioPlayer(guild: Guild): GuildMusicManager {
         val guildId = guild.idLong
-        val musicManager = musicManagers.getOrDefault(guildId, GuildMusicManager(playerManager, config))
+        val musicManager = musicManagers.getOrDefault(
+            guildId,
+            GuildMusicManager(playerManager, guild, this, config)
+        )
         musicManagers[guildId] = musicManager
         guild.audioManager.sendingHandler = musicManager.getSendHandler()
         return musicManager
@@ -278,6 +281,13 @@ class MusicBot(private val client: JDA, private val config: Config) {
         trackNum?.let {
             val elevated = guildAudioPlayer(event.guild).scheduler.elevate(it)
             sendMessage(event.channel, codeBlock("Elevated ${elevated?.info?.title} to the top of the queue."))
+        }
+    }
+
+    fun sendNowPlayingMessage(guild: Guild, track: AudioTrack?) {
+        guild.textChannels.filter { it.idLong in config.channels }.forEach {
+            val duration = millisToTime(track?.duration ?: 0)
+            sendMessage(it, codeBlock("Now playing: ${track?.info?.title} ($duration)"))
         }
     }
 
