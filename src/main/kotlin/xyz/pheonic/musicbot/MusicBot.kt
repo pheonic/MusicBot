@@ -291,6 +291,20 @@ class MusicBot(private val client: JDA, private val config: Config) {
         }
     }
 
+    fun seek(event: GuildMessageReceivedEvent) {
+        logger.debug("Got seek ${event.debugString()}")
+        val seekAmount = event.message.contentDisplay.substringAfter(' ').toIntOrNull() ?: 0
+        val guildAudioPlayer = guildAudioPlayer(event.guild)
+        val currentTrack = guildAudioPlayer.nowPlaying()
+        currentTrack?.let {
+            it.position = (it.position + seekAmount * 1000).coerceIn(0, it.duration)
+            sendMessage(
+                event.channel,
+                codeBlock("Track set to ${millisToTime(currentTrack.position)} / ${millisToTime(currentTrack.duration)}")
+            )
+        }
+    }
+
     inner class CustomAudioLoadResultHandler(
         private val event: GuildMessageReceivedEvent,
         private val musicManager: GuildMusicManager,
