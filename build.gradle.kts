@@ -26,7 +26,7 @@ dependencies {
     compile(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.47"
+        version = "1.3.49"
     )
     compile(
         group = "ch.qos.logback",
