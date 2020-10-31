@@ -21,7 +21,7 @@ dependencies {
     compile(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.1.1_127"
+        version = "4.2.0_214"
     )
     compile(
         group = "com.sedmelluq",
