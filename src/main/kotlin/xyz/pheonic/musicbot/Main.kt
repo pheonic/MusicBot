@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import net.dv8tion.jda.api.AccountType
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.requests.GatewayIntent
 
 val logger = KotlinLogging.logger { }
 fun main() {
@@ -21,5 +22,5 @@ fun createListener(config: Config, client: JDA): Listener {
 
 fun createClient(config: Config): JDA {
     logger.debug("Creating client")
-    return JDABuilder(AccountType.BOT).setToken(config.token).build()
+    return JDABuilder.create(config.token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES).build()
 }
