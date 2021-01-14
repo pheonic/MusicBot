@@ -1,6 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     java
@@ -21,12 +21,12 @@ dependencies {
     compile(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.2.0_214"
+        version = "4.2.0_227"
     )
     compile(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.54"
+        version = "1.3.66"
     )
     compile(
         group = "ch.qos.logback",
@@ -43,15 +43,20 @@ dependencies {
         name = "logback-classic",
         version = "1.2.3"
     )
+    compile(
+        group = "com.github.jengelman.gradle.plugins",
+        name = "shadow",
+        version = "5.2.0"
+    )
     testImplementation(
         group = "org.junit.jupiter",
         name = "junit-jupiter",
         version = "5.4.2"
     )
-    compile(
-        group = "com.github.jengelman.gradle.plugins",
-        name = "shadow",
-        version = "5.2.0"
+    testImplementation(
+        group = "io.mockk",
+        name = "mockk",
+        version = "1.10.4"
     )
 }
 
