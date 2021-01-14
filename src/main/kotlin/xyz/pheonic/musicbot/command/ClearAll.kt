@@ -1,0 +1,21 @@
+package xyz.pheonic.musicbot.command
+
+import mu.KotlinLogging
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import xyz.pheonic.musicbot.GuildMusicManager
+
+class ClearAll : Command {
+    private val logger = KotlinLogging.logger { }
+    override val internalName: String
+        get() = "clear-all"
+
+    override fun help(): String {
+        return "clear-all - Clears the queue and the currently playing song. (Bypasses repeat)"
+    }
+
+    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+        logger.debug("Got clear-all ${event.debugString()}")
+        musicManager.scheduler.clearAll()
+        sendMessage(logger, event.channel, codeBlock("Cleared all"))
+    }
+}

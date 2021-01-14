@@ -9,15 +9,14 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 val logger = KotlinLogging.logger { }
 fun main() {
     logger.debug("Starting...")
-    val config = Config()
-    val client = createClient(config)
-    val listener = createListener(config, client)
+    val client = createClient(Config)
+    val listener = createListener(Config, client)
     client.addEventListener(listener)
 }
 
-fun createListener(config: Config, client: JDA): Listener {
+fun createListener(config: Config, client: JDA): MusicBot {
     logger.debug("Creating listener")
-    return Listener(client, config)
+    return MusicBot(client, config)
 }
 
 fun createClient(config: Config): JDA {

@@ -2,7 +2,7 @@ package xyz.pheonic.musicbot
 
 import java.io.File
 
-class Config {
+object Config {
     val token: String
     val prefix: String
     val channels: List<Long>
