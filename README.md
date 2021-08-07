@@ -1,5 +1,5 @@
 # MusicBot
-A discord bot for playing music. Meant to be a self hosted solution rather than having one bot that is added to every server. Though this bot should be able to handle many servers.
+A discord bot for playing music. Meant to be a self-hosted solution rather than having one bot that is added to every server. Though this bot should be able to handle many servers.
 
 This bot is built with [lavaplayer](https://github.com/sedmelluq/lavaplayer) and [JDA](https://github.com/DV8FromTheWorld/JDA). It is also based on [Just-Some-Bots/MusicBot](https://github.com/Just-Some-Bots/MusicBot), many of the base ideas came from that bot.
 
@@ -23,7 +23,7 @@ command_channels=<channel ids>
 
 # Basic Commands
 - summon : Connects the bot to the channel that the user who summoned the bot is connected to
-- play <url> : Queues a song to play by url. Supports youtube, bandcamp and more. See [lavaplayer's supported formats](https://github.com/sedmelluq/lavaplayer/blob/master/README.md#supported-formats)
+- play <url> : Queues a song to play by url. Supports YouTube, bandcamp and more. See [lavaplayer's supported formats](https://github.com/sedmelluq/lavaplayer/blob/master/README.md#supported-formats)
 - skip : Skips the current song
 - clear : Clears the song queue
 - disconnect : Disconnects the bot from its voice channel
@@ -37,6 +37,6 @@ command_channels=<channel ids>
 You can see the rest of the commands by using the musicbot-help command 
 
 # Contributing
-If you want to contribute you can make a pull request and I'll take a look at it. 
+If you want to contribute you can make a pull request, and I'll take a look at it. 
 
 You can also feel free to make an issue with a feature request or bug.

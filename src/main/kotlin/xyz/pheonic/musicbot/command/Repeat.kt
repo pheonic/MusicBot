@@ -18,7 +18,7 @@ class Repeat : Command {
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.debug("Got repeat ${event.debugString()}")
-        val value = event.message.contentDisplay.substringAfter(' ').substringBefore(' ').toUpperCase()
+        val value = event.message.contentDisplay.substringAfter(' ').substringBefore(' ').uppercase()
         if (value.isBlank()) {
             sendMessage(logger, event.channel, codeBlock("Current repeat mode is: ${musicManager.repeatMode}"))
         } else {

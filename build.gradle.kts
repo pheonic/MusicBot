@@ -1,11 +1,10 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.41"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    kotlin("jvm") version "1.5.21"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 group = "xyz.pheonic"
@@ -13,40 +12,35 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    jcenter()
+    maven("https://m2.dv8tion.net/releases")
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8"))
-    compile(
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.2.0_227"
+        version = "4.3.0_307"
     )
-    compile(
+    implementation(
         group = "com.sedmelluq",
         name = "lavaplayer",
-        version = "1.3.66"
+        version = "1.3.78"
     )
-    compile(
+    implementation(
         group = "ch.qos.logback",
         name = "logback-classic",
         version = "1.2.3"
     )
-    compile(
+    implementation(
         group = "io.github.microutils",
         name = "kotlin-logging",
         version = "1.5.4"
     )
-    compile(
+    implementation(
         group = "ch.qos.logback",
         name = "logback-classic",
         version = "1.2.3"
-    )
-    compile(
-        group = "com.github.jengelman.gradle.plugins",
-        name = "shadow",
-        version = "5.2.0"
     )
     testImplementation(
         group = "org.junit.jupiter",
@@ -60,7 +54,7 @@ dependencies {
     )
 }
 
-configure<JavaPluginConvention> {
+configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
@@ -68,38 +62,14 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-tasks.withType<ShadowJar>() {
+tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "xyz.pheonic.musicbot.MainKt"
     }
 }
-
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
         events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
-}
-
-//val fatJar = task("fatJar", type = Jar::class) {
-//    baseName = "${project.name}-fat"
-//    manifest {
-//        attributes["Implementation-Title"] = "xyz.pheonic.MusicBot"
-//        attributes["Implementation-Version"] = version
-//        attributes["Main-Class"] = "xyz.pheonic.musicbot.MainKt"
-//    }
-//    from(configurations.runtime.resolve().map {
-//        if (it.isDirectory) it else {
-//
-//            zipTree(it)
-//
-//        }
-//    })
-//    with(tasks["jar"] as CopySpec)
-//}
-
-tasks {
-    "build" {
-        dependsOn(shadowJar)
     }
 }

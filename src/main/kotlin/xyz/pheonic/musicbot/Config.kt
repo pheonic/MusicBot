@@ -7,6 +7,7 @@ object Config {
     val prefix: String
     val channels: List<Long>
     val startVolume: Int
+    const val botAloneTimer: Long = 1000 * 60 * 60 //1hr in ms
 
     init {
         val fileName = "${System.getProperty("user.home")}${File.separator}.musicbot${File.separator}config.properties"
@@ -15,7 +16,7 @@ object Config {
         configFile.forEachLine {
             if (!it.startsWith('#')) {
                 val split = it.split("=")
-                configMap[split[0].trim().toLowerCase()] = split[1].trim()
+                configMap[split[0].trim().lowercase()] = split[1].trim()
             }
         }
         token = configMap["token"] ?: throw Exception("No token found in file at $fileName")
