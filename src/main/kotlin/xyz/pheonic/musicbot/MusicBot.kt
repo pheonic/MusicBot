@@ -86,6 +86,9 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     }
 
     private fun leaveChannelIfAlone(event: GenericGuildVoiceUpdateEvent) {
+        if (config.botAloneTimer == null || config.botAloneTimer < 0) {
+            return
+        }
         val guild = event.guild
         if (event.channelLeft == null) {
             return
