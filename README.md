@@ -6,7 +6,7 @@ This bot is built with [lavaplayer](https://github.com/sedmelluq/lavaplayer) and
 # Compiling
 For now if you want to use this bot you'll have to compile it into a jar yourself.
 
-You can clone this repo and run `./gradlew shadowJar` which will produce a jar in the build/lib folder then you can use `java -jar MusicBot-1.0-SNAPSHOT-all` to run it.
+You can clone this repo and run `./gradlew shadowJar` which will produce a jar in the build/lib folder then you can use `java -jar MusicBot-1.0-SNAPSHOT-all.jar` to run it.
 
 You will also need to create a config file in your home directory `~/.musicbot/config.properties`
 
