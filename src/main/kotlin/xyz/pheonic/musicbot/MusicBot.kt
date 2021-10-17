@@ -3,6 +3,8 @@ package xyz.pheonic.musicbot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.tools.ExceptionTools
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import mu.KotlinLogging
 import net.dv8tion.jda.api.JDA
@@ -155,6 +157,17 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
             val duration = millisToTime(track?.duration ?: 0)
             try {
                 it.sendMessage("```Now playing: ${track?.info?.title} ($duration)```").complete()
+            } catch (e: Exception) {
+                logger.warn("Don't have permission to post in ${it.name}")
+            }
+        }
+    }
+
+    fun sendTrackExceptionMessage(guild: Guild, track: AudioTrack?, exception: FriendlyException?) {
+        guild.textChannels.filter { it.idLong in config.channels }.forEach {
+            try {
+                it.sendMessage("```Got an exception when trying to play \"${track?.info?.title}\"\n${exception?.cause?.stackTraceToString()}```")
+                    .complete()
             } catch (e: Exception) {
                 logger.warn("Don't have permission to post in ${it.name}")
             }

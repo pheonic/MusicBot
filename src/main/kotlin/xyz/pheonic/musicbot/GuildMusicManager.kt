@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.Guild
 import xyz.pheonic.musicbot.command.PlaySong
@@ -53,6 +54,10 @@ class GuildMusicManager(private val manager: AudioPlayerManager, guild: Guild, m
     inner class GuildEventNotifier(private val guild: Guild, private val musicBot: MusicBot) : AudioEventAdapter() {
         override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
             musicBot.sendNowPlayingMessage(guild, track)
+        }
+
+        override fun onTrackException(player: AudioPlayer?, track: AudioTrack?, exception: FriendlyException?) {
+            musicBot.sendTrackExceptionMessage(guild, track, exception)
         }
     }
 
