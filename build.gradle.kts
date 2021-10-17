@@ -2,8 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.5.30"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
