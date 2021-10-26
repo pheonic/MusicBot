@@ -37,7 +37,7 @@ class PlayNext : Command {
 
         override fun trackLoaded(track: AudioTrack?) {
             track?.let {
-                sendMessage(logger, event.channel, codeBlock("Adding ${it.info.title} to queue)"))
+                sendMessage(logger, event.channel, codeBlock("Adding ${it.info.title} to queue"))
                 musicManager.scheduler.push(it)
             }
         }
