@@ -22,7 +22,7 @@ jobs:
       with:
         arguments: shadowJar
     - name: Rename jar
-    - run: |
+      run: |
         mv build/libs/MusicBot-1.0-SNAPSHOT-all.jar MusicBot-${{github.ref_name}}.jar
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
