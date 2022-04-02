@@ -46,11 +46,6 @@ dependencies {
         name = "kotlin-logging",
         version = "1.5.4"
     )
-    implementation(
-        group = "ch.qos.logback",
-        name = "logback-classic",
-        version = "1.2.3"
-    )
     testImplementation(
         group = "org.junit.jupiter",
         name = "junit-jupiter",
