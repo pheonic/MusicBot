@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.pheonic.musicbot.command.*
 import java.time.Duration
@@ -157,7 +158,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
             val duration = millisToTime(track?.duration ?: 0)
             try {
                 it.sendMessage("```Now playing: ${track?.info?.title} ($duration)```").complete()
-            } catch (e: Exception) {
+            } catch (e: InsufficientPermissionException) {
                 logger.warn("Don't have permission to post in ${it.name}")
             }
         }
@@ -168,7 +169,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
             try {
                 it.sendMessage("```Got an exception when trying to play \"${track?.info?.title}\"\n${exception?.cause?.stackTraceToString()}```")
                     .complete()
-            } catch (e: Exception) {
+            } catch (e: InsufficientPermissionException) {
                 logger.warn("Don't have permission to post in ${it.name}")
             }
         }

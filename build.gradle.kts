@@ -9,6 +9,16 @@ plugins {
 group = "xyz.pheonic"
 version = "1.0-SNAPSHOT"
 
+sourceSets {
+    named("main") {
+        java.srcDir("src/main/kotlin")
+    }
+
+    named("test") {
+        java.srcDir("src/test/kotlin")
+    }
+}
+
 repositories {
     mavenCentral()
     maven("https://m2.dv8tion.net/releases")

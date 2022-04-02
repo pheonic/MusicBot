@@ -3,6 +3,7 @@ package xyz.pheonic.musicbot.command
 import mu.KLogger
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import xyz.pheonic.musicbot.GuildMusicManager
 import java.time.Duration
 import java.time.temporal.ChronoUnit
@@ -20,7 +21,7 @@ interface Command {
     fun sendMessage(logger: KLogger, channel: TextChannel, message: String) {
         try {
             channel.sendMessage(message).complete()
-        } catch (e: Exception) {
+        } catch (e: InsufficientPermissionException) {
             logger.warn("Don't have permission to post in ${channel.name}")
         }
     }
