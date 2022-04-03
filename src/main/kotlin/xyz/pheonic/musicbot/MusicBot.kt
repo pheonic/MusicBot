@@ -3,7 +3,6 @@ package xyz.pheonic.musicbot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
-import com.sedmelluq.discord.lavaplayer.tools.ExceptionTools
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import mu.KotlinLogging
@@ -20,6 +19,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.pheonic.musicbot.command.*
+import xyz.pheonic.musicbot.command.admin.InUse
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
@@ -60,6 +60,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
         commands["playnext"] = PlayNext()
         commands["musicbot-help"] = Help(commands)
         commands["clean"] = Clean(commands, client.selfUser.idLong)
+        commands["in-use"] = InUse(musicManagers, client)
     }
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {

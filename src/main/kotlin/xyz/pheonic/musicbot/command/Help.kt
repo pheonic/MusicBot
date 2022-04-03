@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.Config
 import xyz.pheonic.musicbot.GuildMusicManager
+import xyz.pheonic.musicbot.command.admin.BotMasterOnlyCommand
 
 class Help(private val commands: Map<String, Command>) : Command {
     private val logger = KotlinLogging.logger { }
@@ -23,6 +24,9 @@ class Help(private val commands: Map<String, Command>) : Command {
             Commands:
         """.trimIndent() + "\n"
         for (command in commands.values) {
+            if (command is BotMasterOnlyCommand) {
+                continue
+            }
             helpMessage += "\t" + command.help() + "\n"
         }
         sendMessage(logger, event.channel, codeBlock(helpMessage))

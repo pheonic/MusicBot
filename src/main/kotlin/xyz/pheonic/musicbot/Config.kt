@@ -8,6 +8,7 @@ object Config {
     val channels: List<Long>
     val startVolume: Int
     val botAloneTimer: Long?
+    val botMaster: Long?
 
     init {
         val fileName = "${System.getProperty("user.home")}${File.separator}.musicbot${File.separator}config.properties"
@@ -26,6 +27,6 @@ object Config {
             it.toLongOrNull() ?: throw Exception("Could not read channel id in $fileName")
         } ?: throw Exception("No command_channels in $fileName")
         botAloneTimer = configMap["bot_timeout"]?.toLongOrNull()
-
+        botMaster = configMap["bot_master"]?.toLongOrNull()
     }
 }
