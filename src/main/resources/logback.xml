@@ -1,0 +1,34 @@
+<configuration>
+
+    <property name="HOME_LOG" value="logs/musicbot.log"/>
+
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG}</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/musicbot.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>2GB</totalSizeCap>
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d [%p] %c{1.}:%line [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%p] %c{1.}:%line [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="xyz.pheonic" level="debug" additivity="false">
+        <appender-ref ref="FILE-ROLLING"/>
+    </logger>
+
+    <root level="error">
+        <appender-ref ref="FILE-ROLLING"/>
+    </root>
+
+</configuration>
