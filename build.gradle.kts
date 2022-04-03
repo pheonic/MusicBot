@@ -29,7 +29,7 @@ dependencies {
     implementation(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.3.0_307"
+        version = "4.4.0_352"
     )
     implementation(
         group = "com.sedmelluq",
