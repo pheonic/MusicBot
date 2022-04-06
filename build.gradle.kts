@@ -22,6 +22,7 @@ sourceSets {
 repositories {
     mavenCentral()
     maven("https://m2.dv8tion.net/releases")
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -32,9 +33,9 @@ dependencies {
         version = "4.4.0_352"
     )
     implementation(
-        group = "com.sedmelluq",
-        name = "lavaplayer",
-        version = "1.3.78"
+        group = "com.github.walkyst",
+        name = "lavaplayer-fork",
+        version = "1.3.97"
     )
     implementation(
         group = "ch.qos.logback",
