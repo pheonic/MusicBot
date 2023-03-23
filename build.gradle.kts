@@ -30,7 +30,7 @@ dependencies {
     implementation(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.4.0_352"
+        version = "4.4.1_353"
     )
     implementation(
         group = "com.github.walkyst",
