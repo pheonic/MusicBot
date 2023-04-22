@@ -35,7 +35,7 @@ dependencies {
     implementation(
         group = "com.github.walkyst",
         name = "lavaplayer-fork",
-        version = "1.3.97"
+        version = "1.4.0"
     )
     implementation(
         group = "ch.qos.logback",
