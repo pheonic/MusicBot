@@ -33,9 +33,9 @@ dependencies {
         version = "4.4.1_353"
     )
     implementation(
-        group = "com.github.walkyst",
-        name = "lavaplayer-fork",
-        version = "1.4.0"
+        group = "dev.arbjerg",
+        name = "lavaplayer",
+        version = "1.5.0"
     )
     implementation(
         group = "ch.qos.logback",
