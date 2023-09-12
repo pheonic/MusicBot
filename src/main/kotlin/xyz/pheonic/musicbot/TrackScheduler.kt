@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import java.util.Queue
 import java.util.concurrent.BlockingDeque
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -82,12 +83,29 @@ class TrackScheduler(private val player: AudioPlayer) : AudioEventAdapter() {
         return queue.size
     }
 
-    fun remove(i: Int): AudioTrack? {
+    private fun remove(i: Int): AudioTrack? {
+        if (i < 1 || i > size()) return null
         val list = queue.toMutableList()
         val removed = list.removeAt(i - 1)
         queue.clear()
         queue.addAll(list)
         return removed
+    }
+
+    fun remove(indices: List<Int>): List<AudioTrack> {
+        if (indices.size == 1) {
+            return listOfNotNull(remove(indices[0]))
+        }
+        val list = queue.toMutableList()
+        val removed = ArrayList<AudioTrack>()
+        for (i in indices.sortedDescending()) {
+            if (list.size > i - 1 && i >= 1) {
+                removed.add(list.removeAt(i - 1))
+            }
+        }
+        queue.clear()
+        queue.addAll(list)
+        return removed.reversed()
     }
 
     fun elevate(i: Int): AudioTrack? {

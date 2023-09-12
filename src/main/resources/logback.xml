@@ -24,11 +24,11 @@
     </appender>
 
     <logger name="xyz.pheonic" level="debug" additivity="false">
-        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
     <root level="info">
-        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 
 </configuration>

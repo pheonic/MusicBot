@@ -49,13 +49,18 @@ dependencies {
     )
     testImplementation(
         group = "org.junit.jupiter",
-        name = "junit-jupiter",
-        version = "5.4.2"
+        name = "junit-jupiter-api",
+        version = "5.8.1"
+    )
+    testRuntimeOnly(
+        group = "org.junit.jupiter",
+        name = "junit-jupiter-engine",
+        version = "5.8.1"
     )
     testImplementation(
         group = "io.mockk",
         name = "mockk",
-        version = "1.10.4"
+        version = "1.13.7"
     )
 }
 
