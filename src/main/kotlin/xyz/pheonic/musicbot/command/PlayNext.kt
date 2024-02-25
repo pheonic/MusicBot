@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -18,7 +18,7 @@ class PlayNext : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got playNow ${event.debugString()}")
+        logger.info { "Got playNow ${event.debugString()}" }
         val trackUrl = event.message.contentDisplay.substringAfter(' ').substringBefore(' ')
         musicManager.addItemToQueue(
             trackUrl,

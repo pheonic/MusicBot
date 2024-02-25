@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -15,7 +15,7 @@ class Remove : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got remove ${event.debugString()}")
+        logger.info { "Got remove ${event.debugString()}" }
         var trackRanges = event.message.contentDisplay.substringAfter(' ')
             .replace(" ", "")
             .split(",")

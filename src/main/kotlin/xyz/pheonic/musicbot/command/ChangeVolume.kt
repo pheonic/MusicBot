@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ class ChangeVolume : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got changeVolume ${event.debugString()}")
+        logger.info { "Got changeVolume ${event.debugString()}" }
         val volume = event.message.contentDisplay.substringAfter(' ').toIntOrNull()
         volume?.let { musicManager.volume = it }
         sendMessage(logger, event.channel, codeBlock("Volume set to ${musicManager.volume}"))

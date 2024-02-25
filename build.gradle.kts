@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.9.22"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
@@ -35,17 +35,17 @@ dependencies {
     implementation(
         group = "dev.arbjerg",
         name = "lavaplayer",
-        version = "1.5.0"
+        version = "2.1.0"
     )
     implementation(
-        group = "ch.qos.logback",
-        name = "logback-classic",
-        version = "1.2.3"
+        group = "io.github.oshai",
+        name = "kotlin-logging-jvm",
+        version = "5.1.0"
     )
     implementation(
-        group = "io.github.microutils",
-        name = "kotlin-logging",
-        version = "1.5.4"
+        group = "org.slf4j",
+        name = "slf4j-simple",
+        version = "2.0.3"
     )
     testImplementation(
         group = "org.junit.jupiter",

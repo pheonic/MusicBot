@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ class ShufflePlaylist : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got shuffleQueue ${event.debugString()}")
+        logger.info { "Got shuffleQueue ${event.debugString()}" }
         musicManager.scheduler.shuffle()
         sendMessage(logger, event.channel, codeBlock("Queue shuffled"))
     }

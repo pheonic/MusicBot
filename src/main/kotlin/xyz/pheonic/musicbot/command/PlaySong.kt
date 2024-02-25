@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -18,7 +18,7 @@ open class PlaySong : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got playSong ${event.debugString()}")
+        logger.info { "Got playSong ${event.debugString()}" }
         if (!event.guild.audioManager.isConnected) {
             Summon().execute(event, musicManager)
         }

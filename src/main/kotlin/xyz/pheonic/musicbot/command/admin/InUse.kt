@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command.admin
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
@@ -16,10 +16,10 @@ class InUse(private val musicManagers: HashMap<Long, GuildMusicManager>, private
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got in-use ${event.debugString()}")
+        logger.info { "Got in-use ${event.debugString()}" }
         val user = event.author
         if (!isBotMaster(user)) {
-            logger.warn("User ${user.name} is not the bot master")
+            logger.warn { "User ${user.name} is not the bot master" }
             return
         }
         var message = String()

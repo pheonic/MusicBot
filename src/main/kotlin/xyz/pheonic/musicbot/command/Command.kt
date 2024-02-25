@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KLogger
+import io.github.oshai.kotlinlogging.KLogger
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
@@ -22,7 +22,7 @@ interface Command {
         try {
             channel.sendMessage(message).complete()
         } catch (e: InsufficientPermissionException) {
-            logger.warn("Don't have permission to post in ${channel.name}")
+            logger.warn { "Don't have permission to post in ${channel.name}" }
         }
     }
 

@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.VoiceChannel
@@ -131,7 +131,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     }
 
     private fun notACommand(event: GuildMessageReceivedEvent) {
-        logger.debug("Got notACommand ${event.debugString()}")
+        logger.info { "Got notACommand ${event.debugString()}" }
     }
 
     @Synchronized
@@ -160,7 +160,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
             try {
                 it.sendMessage("```Now playing: ${track?.info?.title} ($duration)```").complete()
             } catch (e: InsufficientPermissionException) {
-                logger.warn("Don't have permission to post in ${it.name}")
+                logger.warn { "Don't have permission to post in ${it.name}" }
             }
         }
     }
@@ -171,7 +171,7 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
                 it.sendMessage("```Got an exception when trying to play \"${track?.info?.title}\"\n${exception?.cause?.stackTraceToString()}```")
                     .complete()
             } catch (e: InsufficientPermissionException) {
-                logger.warn("Don't have permission to post in ${it.name}")
+                logger.warn { "Don't have permission to post in ${it.name}" }
             }
         }
     }

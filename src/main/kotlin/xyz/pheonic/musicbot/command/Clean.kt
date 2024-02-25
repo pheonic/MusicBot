@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.Config
 import xyz.pheonic.musicbot.GuildMusicManager
@@ -15,7 +15,7 @@ class Clean(private val commands: Map<String, Command>, private val botId: Long)
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got clean ${event.debugString()}")
+        logger.info { "Got clean ${event.debugString()}" }
         Thread {
             for (message in event.channel.iterableHistory) {
                 if (message.isPinned) continue
@@ -30,7 +30,7 @@ class Clean(private val commands: Map<String, Command>, private val botId: Long)
                 }
                 Thread.sleep(500)
             }
-            logger.info("Finished cleaning")
+            logger.info { "Finished cleaning" }
         }.start()
     }
 }

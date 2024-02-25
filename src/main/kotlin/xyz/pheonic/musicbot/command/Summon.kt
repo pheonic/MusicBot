@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ class Summon : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got summon ${event.debugString()}")
+        logger.info { "Got summon ${event.debugString()}" }
         val summoner = event.member
         val audioManager = event.guild.audioManager
         val channel = summoner?.voiceState?.channel

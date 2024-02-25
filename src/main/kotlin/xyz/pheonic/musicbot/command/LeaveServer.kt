@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent
 import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceUpdateEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
@@ -17,7 +17,7 @@ class LeaveServer(private val musicManagers: MutableMap<Long, GuildMusicManager>
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got leaveServer ${event.debugString()}")
+        logger.info { "Got leaveServer ${event.debugString()}" }
         sendMessage(logger, event.channel, ":wave:")
         leaveServer(event, musicManager)
     }

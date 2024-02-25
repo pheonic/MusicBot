@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 import xyz.pheonic.musicbot.RepeatMode
@@ -17,7 +17,7 @@ class Repeat : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got repeat ${event.debugString()}")
+        logger.info { "Got repeat ${event.debugString()}" }
         val value = event.message.contentDisplay.trim().substringAfter(" ", "").substringBefore(" ").uppercase()
         if (value.isBlank()) {
             sendMessage(logger, event.channel, codeBlock("Current repeat mode is: ${musicManager.repeatMode}"))

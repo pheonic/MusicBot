@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ class ClearPlaylist : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got clearPlaylist ${event.debugString()}")
+        logger.info { "Got clearPlaylist ${event.debugString()}" }
         musicManager.scheduler.clear()
         sendMessage(logger, event.channel, codeBlock("Cleared queue"))
     }

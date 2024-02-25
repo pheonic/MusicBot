@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.Config
 import xyz.pheonic.musicbot.GuildMusicManager
@@ -16,7 +16,7 @@ class Help(private val commands: Map<String, Command>) : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got help ${event.debugString()}")
+        logger.info { "Got help ${event.debugString()}" }
         var helpMessage = """
             All commands start with: ${Config.prefix}. For example ${Config.prefix}summon.
             The music bot can handle these formats: youtube, soundcloud, bandcamp, vimeo and direct links to music files.

@@ -1,6 +1,6 @@
 package xyz.pheonic.musicbot.command
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ class Seek : Command {
     }
 
     override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
-        logger.debug("Got seek ${event.debugString()}")
+        logger.info { "Got seek ${event.debugString()}" }
         val seekAmount = event.message.contentDisplay.substringAfter(' ').toIntOrNull() ?: 0
         val currentTrack = musicManager.nowPlaying()
         currentTrack?.let {
