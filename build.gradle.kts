@@ -23,6 +23,7 @@ repositories {
     mavenCentral()
     maven("https://m2.dv8tion.net/releases")
     maven("https://jitpack.io")
+    maven("https://maven.lavalink.dev/releases")
 }
 
 dependencies {
@@ -35,7 +36,12 @@ dependencies {
     implementation(
         group = "dev.arbjerg",
         name = "lavaplayer",
-        version = "2.1.0"
+        version = "2.2.1"
+    )
+    implementation(
+        group = "dev.lavalink.youtube",
+        name = "common",
+        version = "1.4.0"
     )
     implementation(
         group = "io.github.oshai",

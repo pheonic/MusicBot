@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import dev.lavalink.youtube.YoutubeAudioSourceManager
 import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
@@ -38,7 +39,12 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
 
     init {
         musicManagers = HashMap()
-        AudioSourceManagers.registerRemoteSources(playerManager)
+        val ytSourceManager = YoutubeAudioSourceManager()
+        playerManager.registerSourceManager(ytSourceManager)
+        AudioSourceManagers.registerRemoteSources(
+            playerManager,
+            com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager::class.java
+        )
         AudioSourceManagers.registerLocalSource(playerManager)
         commands = LinkedHashMap()
         commands["summon"] = Summon()
