@@ -36,12 +36,12 @@ dependencies {
     implementation(
         group = "dev.arbjerg",
         name = "lavaplayer",
-        version = "2.2.1"
+        version = "2.2.2"
     )
     implementation(
         group = "dev.lavalink.youtube",
         name = "common",
-        version = "1.4.0"
+        version = "1.8.3"
     )
     implementation(
         group = "io.github.oshai",
