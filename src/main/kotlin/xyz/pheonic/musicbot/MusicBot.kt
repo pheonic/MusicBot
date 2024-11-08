@@ -40,6 +40,9 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     init {
         musicManagers = HashMap()
         val ytSourceManager = YoutubeAudioSourceManager()
+        config.youtubeRefreshToken?.let {
+            ytSourceManager.useOauth2(it, true)
+        }
         playerManager.registerSourceManager(ytSourceManager)
         AudioSourceManagers.registerRemoteSources(
             playerManager,

@@ -9,6 +9,7 @@ object Config {
     val startVolume: Int
     val botAloneTimer: Long?
     val botMaster: Long?
+    val youtubeRefreshToken: String?
 
     init {
         val fileName = "${System.getProperty("user.home")}${File.separator}.musicbot${File.separator}config.properties"
@@ -28,5 +29,6 @@ object Config {
         } ?: throw Exception("No command_channels in $fileName")
         botAloneTimer = configMap["bot_timeout"]?.toLongOrNull()
         botMaster = configMap["bot_master"]?.toLongOrNull()
+        youtubeRefreshToken = configMap["youtube_refresh_token"]
     }
 }
