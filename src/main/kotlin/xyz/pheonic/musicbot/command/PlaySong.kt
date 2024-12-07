@@ -22,11 +22,19 @@ open class PlaySong : Command {
         if (!event.guild.audioManager.isConnected) {
             Summon().execute(event, musicManager)
         }
-        val trackUrl = event.message.contentDisplay.substringAfter(' ').substringBefore(' ')
+        val audioReference = extractAudioReferenceContent(event.message.contentDisplay)
         musicManager.addItemToQueue(
-            trackUrl,
-            CustomAudioLoadResultHandler(event, musicManager, trackUrl)
+            audioReference,
+            CustomAudioLoadResultHandler(event, musicManager, audioReference)
         )
+    }
+
+    private fun extractAudioReferenceContent(eventContent: String): String {
+        val afterCommand = eventContent.substringAfter(' ')
+        if (eventContent.contains("ytsearch:") || eventContent.contains("ytmsearch:")) {
+            return afterCommand
+        }
+        return afterCommand.substringBefore(' ')
     }
 
     inner class CustomAudioLoadResultHandler(
@@ -53,6 +61,12 @@ open class PlaySong : Command {
             if (playlist?.selectedTrack != null) {
                 sendMessage(logger, event.channel, codeBlock("Adding ${playlist.selectedTrack.info?.title} to queue"))
                 musicManager.scheduler.queue(playlist.selectedTrack)
+            } else if (playlist?.isSearchResult == true) {
+                val firstSearchResult = playlist?.tracks?.get(0)
+                firstSearchResult?.let {
+                    sendMessage(logger, event.channel, codeBlock("Adding ${it.info?.title} to queue"))
+                    musicManager.scheduler.queue(it)
+                }
             } else {
                 val tracks = playlist?.tracks ?: throw Exception("Playlist without tracks")
                 sendMessage(logger, event.channel, codeBlock("Adding ${tracks.size} tracks to the queue"))
