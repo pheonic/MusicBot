@@ -41,7 +41,7 @@ dependencies {
     implementation(
         group = "dev.lavalink.youtube",
         name = "common",
-        version = "1.10.2"
+        version = "1.11.1"
     )
     implementation(
         group = "io.github.oshai",
