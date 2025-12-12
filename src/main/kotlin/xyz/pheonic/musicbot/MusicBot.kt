@@ -77,7 +77,12 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     }
 
     override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
-        leaveChannelIfAlone(event)
+        if (client.selfUser.idLong == event.member.user.idLong && event.channelJoined == null) {
+            val leaveServer: LeaveServer = commands["disconnect"] as LeaveServer
+            leaveServer.leaveServer(event, guildAudioPlayer(event.guild))
+        } else {
+            leaveChannelIfAlone(event)
+        }
     }
 
     private fun leaveChannelIfAlone(event: GuildVoiceUpdateEvent) {
