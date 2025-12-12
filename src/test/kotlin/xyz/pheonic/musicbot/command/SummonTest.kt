@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import net.dv8tion.jda.api.entities.VoiceChannel
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.Test
 import xyz.pheonic.musicbot.GuildMusicManager
 
@@ -14,7 +14,7 @@ internal class SummonTest {
 
     @Test
     fun executeSummonerInChannel() {
-        val event = mockk<GuildMessageReceivedEvent>(relaxed = true)
+        val event = mockk<MessageReceivedEvent>(relaxed = true)
         val musicManager = mockk<GuildMusicManager>(relaxed = true)
         val channel = mockk<VoiceChannel>(relaxed = true)
         every { event.member?.effectiveName } returns "name"
@@ -26,7 +26,7 @@ internal class SummonTest {
 
     @Test
     fun executeSummonerNotInChannel() {
-        val event = mockk<GuildMessageReceivedEvent>(relaxed = true)
+        val event = mockk<MessageReceivedEvent>(relaxed = true)
         val musicManager = mockk<GuildMusicManager>(relaxed = true)
         mockk<VoiceChannel>(relaxed = true)
         every { event.member?.effectiveName } returns "name"

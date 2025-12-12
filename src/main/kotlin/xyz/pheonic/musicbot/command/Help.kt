@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.Config
 import xyz.pheonic.musicbot.GuildMusicManager
 import xyz.pheonic.musicbot.command.admin.BotMasterOnlyCommand
@@ -15,7 +15,7 @@ class Help(private val commands: Map<String, Command>) : Command {
         return "musicbot-help - Prints this help message."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got help ${event.debugString()}" }
         var helpMessage = """
             All commands start with: ${Config.prefix}. For example ${Config.prefix}summon.

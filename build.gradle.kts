@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.25"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
@@ -21,7 +21,6 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven("https://m2.dv8tion.net/releases")
     maven("https://jitpack.io")
     maven("https://maven.lavalink.dev/releases")
 }
@@ -31,7 +30,7 @@ dependencies {
     implementation(
         group = "net.dv8tion",
         name = "JDA",
-        version = "4.4.1_353"
+        version = "5.6.1"
     )
     implementation(
         group = "dev.arbjerg",
@@ -72,10 +71,6 @@ dependencies {
 
 configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_11
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
 }
 
 tasks.withType<Jar> {

@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 import xyz.pheonic.musicbot.RepeatMode
 
@@ -16,7 +16,7 @@ class Repeat : Command {
                 " song to not play again either change the repeat mode or do clear-all."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got repeat ${event.debugString()}" }
         val value = event.message.contentDisplay.trim().substringAfter(" ", "").substringBefore(" ").uppercase()
         if (value.isBlank()) {

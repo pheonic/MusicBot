@@ -9,14 +9,9 @@ import dev.lavalink.youtube.YoutubeAudioSourceManager
 import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.VoiceChannel
-import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceUpdateEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent
-import net.dv8tion.jda.api.events.message.MessageDeleteEvent
-import net.dv8tion.jda.api.events.message.MessageEmbedEvent
-import net.dv8tion.jda.api.events.message.MessageUpdateEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.pheonic.musicbot.command.*
@@ -27,18 +22,17 @@ import java.time.temporal.ChronoUnit
 class MusicBot(private val client: JDA, private val config: Config) : ListenerAdapter() {
     private val logger = KotlinLogging.logger { }
 
-    private fun GuildMessageReceivedEvent.debugString() =
+    private fun MessageReceivedEvent.debugString() =
         "Event [id=${this.messageId}, author=${this.author.name}, content=${this.message.contentDisplay}]"
 
-    private fun GenericGuildVoiceUpdateEvent.debugString() =
+    private fun GuildVoiceUpdateEvent.debugString() =
         "Event [channelLeft=${this.channelLeft}]"
 
     private var playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-    private val musicManagers: MutableMap<Long, GuildMusicManager>
+    private val musicManagers: HashMap<Long, GuildMusicManager> = HashMap()
     private val commands: Map<String, Command>
 
     init {
-        musicManagers = HashMap()
         val ytSourceManager = YoutubeAudioSourceManager()
         config.youtubeRefreshToken?.let {
             ytSourceManager.useOauth2(it, true)
@@ -46,7 +40,6 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
         playerManager.registerSourceManager(ytSourceManager)
         AudioSourceManagers.registerRemoteSources(
             playerManager,
-            com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager::class.java
         )
         AudioSourceManagers.registerLocalSource(playerManager)
         commands = LinkedHashMap()
@@ -68,20 +61,13 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
         commands["playnow"] = PlayNow()
         commands["playnext"] = PlayNext()
         commands["musicbot-help"] = Help(commands)
-        commands["clean"] = Clean(commands, client.selfUser.idLong)
         commands["in-use"] = InUse(musicManagers, client)
     }
 
-    override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
+    override fun onMessageReceived(event: MessageReceivedEvent) {
         val command = event.message.contentDisplay
         if (!command.startsWith(config.prefix)) return
         if (event.channel.idLong !in config.channels) return
-        // When discord receives a message with a url in it, it receives one event when the message is initially sent
-        // and then another when the embed of the link loads, we ignore the second one since both events will have the
-        // command.
-        if (event is MessageEmbedEvent) return
-        if (event is MessageDeleteEvent) return
-        if (event is MessageUpdateEvent) return
         val action = command.split(' ')[0].removePrefix(config.prefix)
         commands[action]?.let {
             it.execute(event, guildAudioPlayer(event.guild))
@@ -90,15 +76,11 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
         notACommand(event)
     }
 
-    override fun onGuildVoiceLeave(event: GuildVoiceLeaveEvent) {
+    override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
         leaveChannelIfAlone(event)
     }
 
-    override fun onGuildVoiceMove(event: GuildVoiceMoveEvent) {
-        leaveChannelIfAlone(event)
-    }
-
-    private fun leaveChannelIfAlone(event: GenericGuildVoiceUpdateEvent) {
+    private fun leaveChannelIfAlone(event: GuildVoiceUpdateEvent) {
         if (config.botAloneTimer == null || config.botAloneTimer < 0) {
             return
         }
@@ -106,23 +88,23 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
         if (event.channelLeft == null) {
             return
         }
-        logger.trace("Someone left/moved from a channel ${event.debugString()}")
+        logger.trace { "Someone left/moved from a channel ${event.debugString()}" }
         val channelId = event.channelLeft!!.idLong
         val channel = getConnectedVoiceChannelInGuild(guild)
 
         if (channel?.idLong == channelId) {
-            logger.trace("Someone left my channel ${channel.name}")
+            logger.trace { "Someone left my channel ${channel.name}" }
             if (channel.members.size == 1) {
-                logger.trace("I'm alone, leaving in ${config.botAloneTimer}ms")
+                logger.trace { "I'm alone, leaving in ${config.botAloneTimer}ms" }
                 Thread {
                     Thread.sleep(config.botAloneTimer)
-                    logger.trace("Checking to see if i'm still alone")
+                    logger.trace { "Checking to see if i'm still alone" }
                     val threadChannel = getConnectedVoiceChannelInGuild(guild)
                     if (threadChannel?.idLong == channelId) {
                         if (threadChannel.members.size == 1) {
-                            logger.trace("I'm alone, leaving voice channel")
+                            logger.trace { "I'm alone, leaving voice channel" }
                             val leaveServer: LeaveServer = commands["disconnect"] as LeaveServer
-                            leaveServer.execute(event, guildAudioPlayer(guild))
+                            leaveServer.leaveServer(event, guildAudioPlayer(guild))
                         }
                     }
                 }.start()
@@ -133,13 +115,13 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     private fun getConnectedVoiceChannelInGuild(guild: Guild): VoiceChannel? {
         for (audioManager in client.audioManagers) {
             if (audioManager.guild.idLong == guild.idLong && audioManager.isConnected) {
-                return audioManager.connectedChannel
+                return audioManager.connectedChannel as VoiceChannel?
             }
         }
         return null
     }
 
-    private fun notACommand(event: GuildMessageReceivedEvent) {
+    private fun notACommand(event: MessageReceivedEvent) {
         logger.info { "Got notACommand ${event.debugString()}" }
     }
 
