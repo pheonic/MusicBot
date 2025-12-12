@@ -34,7 +34,7 @@ class GuildMusicManager(private val manager: AudioPlayerManager, guild: Guild, m
         volume = config.startVolume
     }
 
-    fun nowPlaying(): AudioTrack? = player.playingTrack ?: null
+    fun nowPlaying(): AudioTrack? = player.playingTrack
 
     fun getSendHandler(): AudioPlayerSendHandler {
         return AudioPlayerSendHandler(player)

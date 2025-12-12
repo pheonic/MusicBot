@@ -20,5 +20,10 @@ fun createListener(config: Config, client: JDA): MusicBot {
 
 fun createClient(config: Config): JDA {
     logger.info { "Creating client" }
-    return JDABuilder.create(config.token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES).build()
+    return JDABuilder.create(
+        config.token,
+        GatewayIntent.GUILD_MESSAGES,
+        GatewayIntent.GUILD_VOICE_STATES,
+        GatewayIntent.MESSAGE_CONTENT
+    ).build()
 }

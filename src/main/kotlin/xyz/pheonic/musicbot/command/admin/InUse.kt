@@ -2,7 +2,7 @@ package xyz.pheonic.musicbot.command.admin
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 class InUse(private val musicManagers: HashMap<Long, GuildMusicManager>, private val client: JDA) :
@@ -15,7 +15,7 @@ class InUse(private val musicManagers: HashMap<Long, GuildMusicManager>, private
         return "in-use - Checks if the bot is in use and if so in which servers."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got in-use ${event.debugString()}" }
         val user = event.author
         if (!isBotMaster(user)) {

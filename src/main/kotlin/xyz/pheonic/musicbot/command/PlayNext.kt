@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 class PlayNext : Command {
@@ -17,7 +17,7 @@ class PlayNext : Command {
         return "playnext url - Adds a song to the top of the queue"
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got playNow ${event.debugString()}" }
         val trackUrl = event.message.contentDisplay.substringAfter(' ').substringBefore(' ')
         musicManager.addItemToQueue(
@@ -27,7 +27,7 @@ class PlayNext : Command {
     }
 
     inner class CustomAudioLoadResultHandler(
-        private val event: GuildMessageReceivedEvent,
+        private val event: MessageReceivedEvent,
         private val musicManager: GuildMusicManager,
         private val trackUrl: String
     ) : AudioLoadResultHandler {

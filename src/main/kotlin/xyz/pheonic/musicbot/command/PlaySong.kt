@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 open class PlaySong : Command {
@@ -17,7 +17,7 @@ open class PlaySong : Command {
         return "play url - Adds this url to the queue."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got playSong ${event.debugString()}" }
         if (!event.guild.audioManager.isConnected) {
             Summon().execute(event, musicManager)
@@ -38,7 +38,7 @@ open class PlaySong : Command {
     }
 
     inner class CustomAudioLoadResultHandler(
-        private val event: GuildMessageReceivedEvent,
+        private val event: MessageReceivedEvent,
         private val musicManager: GuildMusicManager,
         private val trackUrl: String
     ) : AudioLoadResultHandler {
@@ -62,7 +62,7 @@ open class PlaySong : Command {
                 sendMessage(logger, event.channel, codeBlock("Adding ${playlist.selectedTrack.info?.title} to queue"))
                 musicManager.scheduler.queue(playlist.selectedTrack)
             } else if (playlist?.isSearchResult == true) {
-                val firstSearchResult = playlist?.tracks?.get(0)
+                val firstSearchResult = playlist.tracks?.get(0)
                 firstSearchResult?.let {
                     sendMessage(logger, event.channel, codeBlock("Adding ${it.info?.title} to queue"))
                     musicManager.scheduler.queue(it)

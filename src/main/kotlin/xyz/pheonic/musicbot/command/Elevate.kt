@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 class Elevate : Command {
@@ -13,7 +13,7 @@ class Elevate : Command {
         return "elevate number - Elevates the track at this point in the queue to the top."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got elevate ${event.debugString()}" }
         val trackNum = event.message.contentDisplay.substringAfter(' ').toIntOrNull()
         trackNum?.let {

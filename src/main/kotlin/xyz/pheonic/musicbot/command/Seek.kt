@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 class Seek : Command {
@@ -13,7 +13,7 @@ class Seek : Command {
         return "seek amountOfTime - goes forward or backwards by the amount of time provided in seconds, negative numbers go back"
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got seek ${event.debugString()}" }
         val seekAmount = event.message.contentDisplay.substringAfter(' ').toIntOrNull() ?: 0
         val currentTrack = musicManager.nowPlaying()

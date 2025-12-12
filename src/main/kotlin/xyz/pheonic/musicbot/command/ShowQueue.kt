@@ -1,7 +1,7 @@
 package xyz.pheonic.musicbot.command
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import xyz.pheonic.musicbot.GuildMusicManager
 
 class ShowQueue : Command {
@@ -15,7 +15,7 @@ class ShowQueue : Command {
                 " as well as the total time of all of the songs in the queue."
     }
 
-    override fun execute(event: GuildMessageReceivedEvent, musicManager: GuildMusicManager) {
+    override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got showQueue ${event.debugString()}" }
         var i = 1
         val currentTrack = musicManager.nowPlaying()
