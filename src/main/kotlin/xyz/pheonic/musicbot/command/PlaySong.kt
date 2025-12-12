@@ -62,7 +62,7 @@ open class PlaySong : Command {
                 sendMessage(logger, event.channel, codeBlock("Adding ${playlist.selectedTrack.info?.title} to queue"))
                 musicManager.scheduler.queue(playlist.selectedTrack)
             } else if (playlist?.isSearchResult == true) {
-                val firstSearchResult = playlist?.tracks?.get(0)
+                val firstSearchResult = playlist.tracks?.get(0)
                 firstSearchResult?.let {
                     sendMessage(logger, event.channel, codeBlock("Adding ${it.info?.title} to queue"))
                     musicManager.scheduler.queue(it)
