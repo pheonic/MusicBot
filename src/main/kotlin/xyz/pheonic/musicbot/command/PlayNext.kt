@@ -20,16 +20,18 @@ class PlayNext : Command {
     override fun execute(event: MessageReceivedEvent, musicManager: GuildMusicManager) {
         logger.info { "Got playNow ${event.debugString()}" }
         val trackUrl = event.message.contentDisplay.substringAfter(' ').substringBefore(' ')
+        val startMillis = YoutubeTimestamp.extractStartMillis(trackUrl)
         musicManager.addItemToQueue(
             trackUrl,
-            CustomAudioLoadResultHandler(event, musicManager, trackUrl)
+            CustomAudioLoadResultHandler(event, musicManager, trackUrl, startMillis)
         )
     }
 
     inner class CustomAudioLoadResultHandler(
         private val event: MessageReceivedEvent,
         private val musicManager: GuildMusicManager,
-        private val trackUrl: String
+        private val trackUrl: String,
+        private val startMillis: Long?
     ) : AudioLoadResultHandler {
         override fun loadFailed(exception: FriendlyException?) {
             sendMessage(logger, event.channel, codeBlock("Could not play: ${exception?.message}"))
@@ -37,6 +39,7 @@ class PlayNext : Command {
 
         override fun trackLoaded(track: AudioTrack?) {
             track?.let {
+                applyStartMillis(it, startMillis)
                 sendMessage(logger, event.channel, codeBlock("Adding ${it.info.title} to queue"))
                 musicManager.scheduler.push(it)
             }

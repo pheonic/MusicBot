@@ -153,8 +153,10 @@ class MusicBot(private val client: JDA, private val config: Config) : ListenerAd
     fun sendNowPlayingMessage(guild: Guild, track: AudioTrack?) {
         guild.textChannels.filter { it.idLong in config.channels }.forEach {
             val duration = millisToTime(track?.duration ?: 0)
+            val positionMillis = track?.position ?: 0L
+            val positionLabel = if (positionMillis > 0L) "${millisToTime(positionMillis)}/" else ""
             try {
-                it.sendMessage("```Now playing: ${track?.info?.title} ($duration)```").complete()
+                it.sendMessage("```Now playing: ${track?.info?.title} ($positionLabel$duration)```").complete()
             } catch (e: InsufficientPermissionException) {
                 logger.warn { "Don't have permission to post in ${it.name}" }
             }
