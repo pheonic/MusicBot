@@ -34,7 +34,8 @@ class ShowQueue : Command {
             val nextTrack = iterator.next()
             totalTime += nextTrack.duration
             if (stringBuilder.length < 1500) {
-                stringBuilder.append("$i. ${nextTrack.info.title} (${millisToTime(nextTrack.duration)})\n")
+                val durationLabel = formatPositionDuration(nextTrack.position, nextTrack.duration)
+                stringBuilder.append("$i. ${nextTrack.info.title} ($durationLabel)\n")
                 i++
             }
         }
@@ -43,5 +44,12 @@ class ShowQueue : Command {
         }
         stringBuilder.append("\nTotal queue time: ${millisToTime(totalTime)}")
         sendMessage(logger, event.channel, codeBlock(stringBuilder.toString()))
+    }
+
+    private fun formatPositionDuration(positionMillis: Long, durationMillis: Long): String {
+        if (positionMillis > 0L) {
+            return "${millisToTime(positionMillis)}/${millisToTime(durationMillis)}"
+        }
+        return millisToTime(durationMillis)
     }
 }
