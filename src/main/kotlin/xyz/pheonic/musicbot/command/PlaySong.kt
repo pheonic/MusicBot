@@ -23,9 +23,11 @@ open class PlaySong : Command {
             Summon().execute(event, musicManager)
         }
         val audioReference = extractAudioReferenceContent(event.message.contentDisplay)
+        val startMillis = YoutubeTimestamp.extractStartMillis(audioReference)
+
         musicManager.addItemToQueue(
             audioReference,
-            CustomAudioLoadResultHandler(event, musicManager, audioReference)
+            CustomAudioLoadResultHandler(event, musicManager, audioReference, startMillis)
         )
     }
 
@@ -40,7 +42,8 @@ open class PlaySong : Command {
     inner class CustomAudioLoadResultHandler(
         private val event: MessageReceivedEvent,
         private val musicManager: GuildMusicManager,
-        private val trackUrl: String
+        private val trackUrl: String,
+        private val startMillis: Long?
     ) : AudioLoadResultHandler {
         override fun loadFailed(exception: FriendlyException?) {
             sendMessage(logger, event.channel, codeBlock("Could not play: ${exception?.message}"))
@@ -48,6 +51,9 @@ open class PlaySong : Command {
 
         override fun trackLoaded(track: AudioTrack?) {
             track?.let {
+                startMillis?.let { millis ->
+                    it.position = millis.coerceIn(0L, it.duration)
+                }
                 sendMessage(logger, event.channel, codeBlock("Adding ${it.info.title} to queue"))
                 musicManager.scheduler.queue(it)
             }
@@ -59,11 +65,18 @@ open class PlaySong : Command {
 
         override fun playlistLoaded(playlist: AudioPlaylist?) {
             if (playlist?.selectedTrack != null) {
-                sendMessage(logger, event.channel, codeBlock("Adding ${playlist.selectedTrack.info?.title} to queue"))
-                musicManager.scheduler.queue(playlist.selectedTrack)
+                val selectedTrack = playlist.selectedTrack
+                startMillis?.let { millis ->
+                    selectedTrack.position = millis.coerceIn(0L, selectedTrack.duration)
+                }
+                sendMessage(logger, event.channel, codeBlock("Adding ${selectedTrack.info?.title} to queue"))
+                musicManager.scheduler.queue(selectedTrack)
             } else if (playlist?.isSearchResult == true) {
                 val firstSearchResult = playlist.tracks?.get(0)
                 firstSearchResult?.let {
+                    startMillis?.let { millis ->
+                        firstSearchResult.position = millis.coerceIn(0L, firstSearchResult.duration)
+                    }
                     sendMessage(logger, event.channel, codeBlock("Adding ${it.info?.title} to queue"))
                     musicManager.scheduler.queue(it)
                 }
