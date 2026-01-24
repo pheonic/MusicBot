@@ -3,6 +3,8 @@ package xyz.pheonic.musicbot.command
 import java.net.URI
 
 /**
+ * FYI This file was entirely AI generated
+ *
  * Extracts a start position (ms) from common YouTube URL timestamp formats:
  * - https://youtu.be/<id>?t=90
  * - https://www.youtube.com/watch?v=<id>&t=1m30s
@@ -12,20 +14,19 @@ import java.net.URI
  * Returns null if the input is not a URL or no timestamp is present.
  */
 object YoutubeTimestamp {
+    private val TIME_REGEX = Regex("""^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$""")
+    private val TIMESTAMP_KEYS = listOf("t", "start")
+    private val YOUTUBE_HOSTS = listOf("youtube.com", "youtu.be")
+
     fun extractStartMillis(inputUrl: String): Long? {
         val uri = runCatching { URI(inputUrl.trim()) }.getOrNull() ?: return null
         val host = (uri.host ?: return null).lowercase()
-        if (!host.contains("youtube.com") && !host.contains("youtu.be")) return null
+        if (!isYoutubeHost(host)) return null
 
         val queryParams = parseQueryParams(uri.rawQuery)
         val fragmentParams = parseFragmentParams(uri.rawFragment)
 
-        val raw =
-            queryParams["t"]
-                ?: queryParams["start"]
-                ?: fragmentParams["t"]
-                ?: fragmentParams["start"]
-                ?: return null
+        val raw = queryParams.firstTimestamp() ?: fragmentParams.firstTimestamp() ?: return null
 
         val seconds = parseYoutubeTimeToSeconds(raw) ?: return null
         return (seconds * 1000L).coerceAtLeast(0L)
@@ -56,6 +57,12 @@ object YoutubeTimestamp {
     private fun decodeUrlComponent(s: String): String =
         runCatching { java.net.URLDecoder.decode(s, Charsets.UTF_8) }.getOrDefault(s)
 
+    private fun isYoutubeHost(host: String): Boolean =
+        YOUTUBE_HOSTS.any { host == it || host.endsWith(".$it") }
+
+    private fun Map<String, String>.firstTimestamp(): String? =
+        TIMESTAMP_KEYS.firstNotNullOfOrNull { this[it] }
+
     private fun parseYoutubeTimeToSeconds(raw: String): Long? {
         val s = raw.trim().lowercase()
         if (s.isBlank()) return null
@@ -64,12 +71,14 @@ object YoutubeTimestamp {
         s.toLongOrNull()?.let { return it.coerceAtLeast(0L) }
 
         // Formats like "1h2m3s", "2m10s", "45s"
-        val regex = Regex("""^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$""")
-        val m = regex.matchEntire(s) ?: return null
-        val hours = m.groupValues[1].takeIf { it.isNotBlank() }?.toLongOrNull() ?: 0L
-        val minutes = m.groupValues[2].takeIf { it.isNotBlank() }?.toLongOrNull() ?: 0L
-        val seconds = m.groupValues[3].takeIf { it.isNotBlank() }?.toLongOrNull() ?: 0L
+        val m = TIME_REGEX.matchEntire(s) ?: return null
+        val hours = m.groupValues[1].parseTimeComponent()
+        val minutes = m.groupValues[2].parseTimeComponent()
+        val seconds = m.groupValues[3].parseTimeComponent()
         val total = hours * 3600 + minutes * 60 + seconds
         return if (total == 0L) null else total
     }
+
+    private fun String.parseTimeComponent(): Long =
+        takeIf { it.isNotBlank() }?.toLongOrNull() ?: 0L
 }

@@ -55,6 +55,18 @@ class YoutubeTimestampTest {
     }
 
     @Test
+    fun `accepts youtube subdomain`() {
+        val subdomain = YoutubeTimestamp.extractStartMillis("https://m.youtube.com/watch?v=abc123&t=5")
+        assertEquals(5_000L, subdomain)
+    }
+
+    @Test
+    fun `rejects youtube false positive`() {
+        val falsePositive = YoutubeTimestamp.extractStartMillis("https://notyoutube.com/watch?v=abc123&t=5")
+        assertNull(falsePositive)
+    }
+
+    @Test
     fun `ignores non-url input`() {
         val ms = YoutubeTimestamp.extractStartMillis("ytsearch: never gonna give you up")
         assertNull(ms)
