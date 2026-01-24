@@ -51,9 +51,7 @@ open class PlaySong : Command {
 
         override fun trackLoaded(track: AudioTrack?) {
             track?.let {
-                startMillis?.let { millis ->
-                    it.position = millis.coerceIn(0L, it.duration)
-                }
+                applyStartMillis(it)
                 sendMessage(logger, event.channel, codeBlock("Adding ${it.info.title} to queue"))
                 musicManager.scheduler.queue(it)
             }
@@ -66,17 +64,13 @@ open class PlaySong : Command {
         override fun playlistLoaded(playlist: AudioPlaylist?) {
             if (playlist?.selectedTrack != null) {
                 val selectedTrack = playlist.selectedTrack
-                startMillis?.let { millis ->
-                    selectedTrack.position = millis.coerceIn(0L, selectedTrack.duration)
-                }
+                applyStartMillis(selectedTrack)
                 sendMessage(logger, event.channel, codeBlock("Adding ${selectedTrack.info?.title} to queue"))
                 musicManager.scheduler.queue(selectedTrack)
             } else if (playlist?.isSearchResult == true) {
                 val firstSearchResult = playlist.tracks?.get(0)
                 firstSearchResult?.let {
-                    startMillis?.let { millis ->
-                        firstSearchResult.position = millis.coerceIn(0L, firstSearchResult.duration)
-                    }
+                    applyStartMillis(it)
                     sendMessage(logger, event.channel, codeBlock("Adding ${it.info?.title} to queue"))
                     musicManager.scheduler.queue(it)
                 }
@@ -87,6 +81,14 @@ open class PlaySong : Command {
                     musicManager.scheduler.queue(track)
                 }
             }
+        }
+
+        private fun applyStartMillis(track: AudioTrack) {
+            val millis = startMillis ?: return
+            if (!track.isSeekable) return
+            val duration = track.duration
+            if (duration <= 0L) return
+            track.position = millis.coerceIn(0L, duration)
         }
     }
 }
